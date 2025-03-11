@@ -29,18 +29,21 @@ const userSchema = Schema({
         type: Boolean,
         default: false,
     },
-    ressetPasswordOtp: Number,
-    ressetPasswrodOtpExprires: Date,
-    withlist: [
+    resetPasswordOtp: Number,
+    resetPasswordOtpExpires: Date,
+    wishlist: [
         {
             productId: {type: Schema.Types.ObjectId, ref: 'Product', required: true},
             productName: {type: String, required: true},
             productImage: {type: String, required: true},
-            productPrice: {type: Number, requied: true},
+            productPrice: {type: Number, required: true},
         },
     ],
 });
 
 userSchema.index({email: 1}, {unique: true});
+
+userSchema.set('toObject', {virtuals: true });
+userSchema.set('toJSON', { virtuals: true });
 
 exports.User = model('User', userSchema);

@@ -11,8 +11,14 @@ router.post('/categories', adminController.addCategory);
 router.put('/categories/:id', adminController.editCategory);
 router.delete('/categories/:id', adminController.deleteCategory);
 
-router.get('/orders', adminController.getOders);
-router.get('/oders/count', adminController.getOdersCount);
+router.get('/products/count', adminController.addCategory);
+router.post('/products', adminController.addProduct);
+router.put('/products/:id', adminController.editProduct);
+router.delete('/products/:id/images', adminController.deleteProductImages);
+router.delete('/products/:id', adminController.deleteProduct);
+
+router.get('/orders', adminController.getOrders);
+router.get('/oders/count', adminController.getOrdersCount);
 router.put('/orders/:id', adminController.changeOrderStatus);
 
 module.exports = router;
