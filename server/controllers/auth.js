@@ -119,8 +119,8 @@ exports.forgotPassword = async function (req, res) {
     // Tạo mã OTP gồm 4 chữ số
     const otp = Math.floor(1000 + Math.random() * 9000);
 
-    user.resetPasswordOTP = otp;
-    user.resetPasswordOTPExpires = Date.now() + 600000; // 10 phút
+    user.resetPasswordOtp = otp;
+    user.resetPasswordOtpExpires = Date.now() + 600000; // 10 phút
 
     await user.save();
 
@@ -145,12 +145,12 @@ exports.verifyPasswordResetOTP = async function (req, res) {
       return res.status(404).json({ message: 'Không tìm thấy người dùng!' });
     }
 
-    if (user.resetPasswordOTP !== +otp || Date.now() > user.resetPasswordOTPExpires) {
+    if (user.resetPasswordOtp !== +otp || Date.now() > user.resetPasswordOtpExpires) {
       return res.status(401).json({ message: 'OTP không hợp lệ hoặc đã hết hạn' });
     }
 
-    user.resetPasswordOTP = 1;
-    user.resetPasswordOTPExpires = undefined;
+    user.resetPasswordOtp = 1;
+    user.resetPasswordOtpExpires = undefined;
     await user.save();
     return res.status(200).json({ message: 'Xác thực OTP thành công. Bạn có thể đặt lại mật khẩu.' });
   } catch (error) {
@@ -176,12 +176,12 @@ exports.resetPassword = async function (req, res) {
       return res.status(404).json({ message: 'Không tìm thấy người dùng!' });
     }
 
-    if (user.resetPasswordOTP !== 1) {
+    if (user.resetPasswordOtp !== 1) {
       return res.status(401).json({ message: 'Vui lòng xác thực OTP trước khi đặt lại mật khẩu.' });
     }
 
     user.passwordHash = bcrypt.hashSync(newPassword, 8);
-    user.resetPasswordOTP = undefined;
+    user.resetPasswordOtp = undefined;
 
     await user.save();
 
