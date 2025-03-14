@@ -88,101 +88,104 @@ exports.addProduct = async function (req, res) {
 
 exports.editProduct = async function (req, res) {
   try {
+    // Kiểm tra ID sản phẩm hợp lệ
     if (
       !mongoose.isValidObjectId(req.params.id) ||
       !(await Product.findById(req.params.id))
     ) {
       return res.status(404).json({ message: "Invalid Product" });
-    }    
+    }
 
+    // Nếu có cập nhật danh mục, kiểm tra danh mục đó
     if (req.body.category) {
       const category = await Category.findById(req.body.category);
       if (!category) {
-        return res.status(404).json({ message: "no ..." });
+        return res.status(404).json({ message: "Invalid category" });
       }
       if (category.markedForDeletion) {
         return res
           .status(404)
-          .json({ message: "category marded for deletion" });
-      }
-
-      const product = await Product.findById(req.params.id);
-
-      if (req.body.images) {
-        const limit = 10 - product.images.length;
-        const uploadGalary = util.promisify(
-          media_helper.upload.fields([{ name: "images", maxCount: limit }])
-        );
-
-        try {
-          await uploadGalary(req, res);
-        } catch (error) {
-          console.error(error);
-          return res.status(500).json({
-            type: error.code,
-            message: `${error.message}${error.field}`,
-            storageErrors: error.storageErrors,
-          });
-        }
-        const imageFiles = req.files["images"];
-        const updateGalary = imageFiles && imageFiles.length > 0;
-        if (updateGalary) {
-          const imagePaths = [];
-          for (const image of gallery) {
-            const imagePath = `${req.protocol}://${req.get("host")}/${
-              image.path
-            }`;
-            imagePaths.push(imagePath);
-          }
-          req.body["images"] = [...product.images, ...imagePaths];
-        }
-      }
-      if (req.body.image) {
-        const uploadImage = util.promisify(
-          media_helper.upload.fields([{ name: "image", maxCount: 1 }])
-        );
-
-        try {
-          await uploadImage(req, res);
-        } catch (error) {
-          console.error(error);
-          return res.status(500).json({
-            type: error.code,
-            message: `${error.message}${error.field}`,
-            storageErrors: error.storageErrors,
-          });
-        }
-
-        const image = req.files["image"][0];
-        if (!image) {
-          return res.status(404).json({ message: "No file found!" });
-        }
-
-        req.body["image"] = `${req.protocol}://${req.get("host")}/${
-          image.path
-        }`;
+          .json({ message: "Category is marked for deletion" });
       }
     }
 
+    // Lấy thông tin sản phẩm hiện tại
+    const product = await Product.findById(req.params.id);
+
+    // Xử lý cập nhật gallery nếu có
+    if (req.body.images) {
+      const limit = 10 - (product.images ? product.images.length : 0);
+      const uploadGallery = util.promisify(
+        media_helper.upload.fields([{ name: "images", maxCount: limit }])
+      );
+
+      try {
+        await uploadGallery(req, res);
+      } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+          type: error.code,
+          message: `${error.message}${error.field}`,
+          storageErrors: error.storageErrors,
+        });
+      }
+      const imageFiles = req.files["images"];
+      if (imageFiles && imageFiles.length > 0) {
+        const imagePaths = [];
+        for (const image of imageFiles) { // sử dụng imageFiles thay vì gallery
+          const imagePath = `${req.protocol}://${req.get("host")}/${image.path}`;
+          imagePaths.push(imagePath);
+        }
+        req.body["images"] = [...(product.images || []), ...imagePaths];
+      }
+    }
+
+    // Xử lý cập nhật ảnh chính nếu có
+    if (req.body.image) {
+      const uploadImage = util.promisify(
+        media_helper.upload.fields([{ name: "image", maxCount: 1 }])
+      );
+
+      try {
+        await uploadImage(req, res);
+      } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+          type: error.code,
+          message: `${error.message}${error.field}`,
+          storageErrors: error.storageErrors,
+        });
+      }
+
+      const image = req.files["image"] ? req.files["image"][0] : null;
+      if (!image) {
+        return res.status(404).json({ message: "No file found!" });
+      }
+
+      req.body["image"] = `${req.protocol}://${req.get("host")}/${image.path}`;
+    }
+
+    // Cập nhật sản phẩm
     const updatedProduct = await Product.findByIdAndUpdate(
       req.params.id,
       req.body,
-      {new: true}
+      { new: true }
     );
-    if(!updatedProduct){
-      return res.status(404).json({message: 'Product'})
+    if (!updatedProduct) {
+      return res.status(404).json({ message: "Product not updated" });
     }
 
     return res.json(updatedProduct);
   } catch (error) {
     console.error(error);
-    if (err instanceof multer.MulterError) {
-      return res.status(err.code).json({ message: err.message });
+    if (error instanceof multer.MulterError) {
+      return res.status(500).json({ message: error.message });
     }
 
     return res.status(500).json({ type: error.name, message: error.message });
   }
 };
+
 
 exports.deleteProductImages = async function (req, res) {};
 
