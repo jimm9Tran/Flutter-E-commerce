@@ -31,6 +31,7 @@ const userSchema = Schema({
     },
     resetPasswordOtp: Number,
     resetPasswordOtpExpires: Date,
+    cart: [{ type: Schema.Types.ObjectId, ref: 'CartProduct' }],
     wishlist: [
         {
             productId: {type: Schema.Types.ObjectId, ref: 'Product', required: true},

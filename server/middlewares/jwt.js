@@ -6,7 +6,7 @@ function authJwt() {
   return expjwt({
     secret: process.env.ACCESS_TOKEN_SECRET,
     algorithms: ['HS256'],
-    isRevoked: isRevoked,
+    isRevoked,
   }).unless({
     path: [
       `${API}/login`,
@@ -31,10 +31,16 @@ async function isRevoked(req, token) {
   }
   
   const accessToken = authHeader.replace('Bearer ', '').trim();
-  const tokenDoc = await Token.findOne({ accessToken });
+  let tokenDoc;
+  try {
+    tokenDoc = await Token.findOne({ accessToken });
+  } catch (err) {
+    console.error('Error fetching token from DB:', err);
+    return true;
+  }
   
   const adminRouteRegex = /^\/api\/v1\/admin\//i;
-  const adminFault = !token.payload.isAdmin && adminRouteRegex.test(req.originalUrl);
+  const adminFault = !token?.payload?.isAdmin && adminRouteRegex.test(req.originalUrl);
 
   return adminFault || !tokenDoc;
 }

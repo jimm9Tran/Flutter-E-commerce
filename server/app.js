@@ -1,4 +1,4 @@
-const express =  require('express');
+const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const morgan = require('morgan');
@@ -14,8 +14,8 @@ app.use(bodyParser.json());
 app.use(morgan('tiny'));
 app.use(cors());
 app.options('*', cors());
+
 app.use(authJwt);
-app.use(errorHandler);
 
 const authRouter = require('./routes/auth');
 const usersRouter = require('./routes/users');
@@ -24,6 +24,9 @@ const adminRouter = require('./routes/admin');
 app.use(`${API}/`, authRouter);
 app.use(`${API}/users`, usersRouter);
 app.use(`${API}/admin`, adminRouter);
+app.use('/public', express.static(__dirname + '/public'));
+
+app.use(errorHandler);
 
 const hostname = process.env.HOSTNAME;
 const port = process.env.PORT;
