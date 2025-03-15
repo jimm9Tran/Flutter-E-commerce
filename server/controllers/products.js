@@ -29,17 +29,82 @@ exports.getProducts = async function (req, res) {
       }
 
       products = await Product.find(query)
+        .select('images -reviews -size')
         .skip((page - 1) * pageSize)
         .limit(pageSize);
 
       return res.json(products);
+    } else if (req.query.category) {
+      products = await Product.find({category: req.query.category})
+      .select('images -reviews -size')
+      .skip((page - 1) * pageSize)
+      .limit(pageSize);
+
+    } else {
+      products = await Product.find()
+      .select('images -reviews -size')
+      .skip((page - 1) * pageSize)
+      .limit(pageSize);
     }
+
+    if (!products) {
+      return res.status(404).json({message: 'Products not found'});
+    }
+
+    return res.json(products);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ type: error.name, message: error.message });
   }
 };
 
-exports.searchProducts = async function (req, res) {};
+exports.searchProducts = async function (req, res) {
+  try {
+    const searchTerm = req.query.q;
+    
+    const page = req.query.page || 1;
+    const pageSize = 10;
 
-exports.getProductById = async function (req, res) {};
+    let query = {};
+
+    if(req.query.category) {
+      query = {category: req.query.category};
+      if (req.query.genderAgeCategory) {
+        query['genderAgeCategory'] = req.query.genderAgeCategory.toLowerCase();
+      }
+
+    } else if(req.query.genderAgeCategory) {
+      query = { genderAgeCategory: req.query.genderAgeCategory.toLowerCase() };
+    }
+
+    if(searchTerm) {
+      query = {
+        ...query,
+        $text: {
+          $search: searchTerm,
+          $language: 'english',
+          $caseSensitive: false,
+        },
+      };
+    }
+
+    const searchResults = await Product.find(query)
+      .skip((page - 1) * pageSize)
+      .limit(pageSize);
+    
+    return res.json(searchResults);
+    
+    } catch (error) {
+    console.error(error);
+    return res.status(500).json({ type: error.name, message: error.message });
+  }
+};
+
+exports.getProductById = async function (req, res) {
+  try {
+    
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ type: error.name, message: error.message });
+  }
+};
