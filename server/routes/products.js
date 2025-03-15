@@ -1,9 +1,13 @@
-// const router = express().Router();
-// const productControllers = require('../controllers/products');
+const express = require('express');
+const router = express.Router();
+const productsController = require('../controllers/products');
+const reviewsController = require('../controllers/reviews');
 
-// router.get('/products/count', productControllers.getProductsCount);
-// router.get('/products/:id', productControllers.getProductDetail);
-// router.delete('/products/:id');
-// router.put('/products/:id');
+router.get('/', productsController.getProducts);
+router.get('/search', productsController.searchProducts);
 
-// module.exports = router;
+router.get('/:id', productsController.getProductById);
+router.post('/:id/reviews', reviewsController.leaveReview);
+router.get('/:id/reviews', reviewsController.getProductReviews);
+
+module.exports = router;

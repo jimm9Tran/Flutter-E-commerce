@@ -4,32 +4,38 @@ const cors = require('cors');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 require('dotenv/config');
+const authJwt = require('./middlewares/jwt');
+const errorHandler = require('./middlewares/error_handler');
 
 const app = express();
 const API = process.env.API_URL;
-const authJwt = require('./middlewares/jwt');
-const errorHandler = require('./middlewares/error_handler');
+
 
 app.use(bodyParser.json());
 app.use(morgan('tiny'));
 app.use(cors());
 app.options('*', cors());
 
-app.use(authJwt);
+app.use(authJwt());
+app.use(errorHandler);
 
 const authRouter = require('./routes/auth');
 const usersRouter = require('./routes/users');
 const adminRouter = require('./routes/admin');
+const categoriesRouter = require('./routes/categories');
+const productsRouter = require('./routes/products');
 
 app.use(`${API}/`, authRouter);
 app.use(`${API}/users`, usersRouter);
 app.use(`${API}/admin`, adminRouter);
+app.use(`${API}/categories`, categoriesRouter);
+app.use(`${API}/products`, productsRouter);
 app.use('/public', express.static(__dirname + '/public'));
-
-app.use(errorHandler);
 
 const hostname = process.env.HOSTNAME;
 const port = process.env.PORT;
+
+require('./helpers/cron_job');
 
 mongoose
     .connect(process.env.MONGODB_CONNECTION)

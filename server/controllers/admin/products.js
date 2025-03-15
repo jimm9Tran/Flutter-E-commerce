@@ -1,9 +1,10 @@
 const { Product } = require("../../models/product");
+const { Review } = require("../../models/review");
+const { Category } = require("../../models/category");
 const media_helper = require("../../helpers/media_helper");
 const util = require("util");
-const { Category } = require("../../models/category");
 const multer = require("multer");
-const mongoose = require("mongoose");
+const { default: mongoose } = require("mongoose");
 
 exports.getProductsCount = async function (req, res) {
   try {
@@ -18,8 +19,6 @@ exports.getProductsCount = async function (req, res) {
     return res.status(500).json({ type: error.name, message: error.message });
   }
 };
-
-exports.getProducts = async function (req, res) {};
 
 exports.addProduct = async function (req, res) {
   try {
@@ -132,8 +131,11 @@ exports.editProduct = async function (req, res) {
       const imageFiles = req.files["images"];
       if (imageFiles && imageFiles.length > 0) {
         const imagePaths = [];
-        for (const image of imageFiles) { // sử dụng imageFiles thay vì gallery
-          const imagePath = `${req.protocol}://${req.get("host")}/${image.path}`;
+        for (const image of imageFiles) {
+          // sử dụng imageFiles thay vì gallery
+          const imagePath = `${req.protocol}://${req.get("host")}/${
+            image.path
+          }`;
           imagePaths.push(imagePath);
         }
         req.body["images"] = [...(product.images || []), ...imagePaths];
@@ -186,7 +188,76 @@ exports.editProduct = async function (req, res) {
   }
 };
 
+exports.deleteProductImages = async function (req, res) {
+  try {
+    const productId = req.params.id;
+    const { deletedImageUrls } = req.body;
 
-exports.deleteProductImages = async function (req, res) {};
+    if (
+      !mongoose.isValidObjectId(productId) ||
+      !Array.isArray(deletedImageUrls)
+    ) {
+      return res.status(400).json({ message: "Invalid request data" });
+    }
 
-exports.deleteProduct = async function (req, res) {};
+    await media_helper.deleteImages(deletedImageUrls);
+
+    const product = await Product.findById(productId);
+
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    product.images = product.images.filter(
+      (image) => !deletedImageUrls.includes(image)
+    );
+
+    await product.save();
+
+    return res.status(204).end();
+  } catch (error) {
+    console.error(`Error deleting product: ${error.message}`);
+    if (error.code === "ENOENT") {
+      return res.status(404).json({ message: "image not found" });
+    }
+
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+exports.deleteProduct = async function (req, res) {
+  try {
+    const productId = req.params.id;
+    if (!mongoose.isValidObjectId(productId)) {
+      return res.status(404).json("Invalid Product");
+    }
+
+    const product = await Product.findById(productId);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+
+    await media_helper.deleteImages(
+      [...product.images, product.image],
+      "ENOENT"
+    );
+
+    await Review.deleteMany({_id: {$in: product.reviews}});
+
+    await Product.findByIdAndDelete(productId);
+
+    return res.status(204).end();
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ type: error.name, message: error.message });
+  }
+};
+
+exports.getProducts = async function (req, res) {
+  try {
+    
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ type: error.name, message: error.message });
+  }
+};
