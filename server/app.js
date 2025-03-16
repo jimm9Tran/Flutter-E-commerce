@@ -25,6 +25,7 @@ const usersRouter = require('./routes/users');
 const adminRouter = require('./routes/admin');
 const categoriesRouter = require('./routes/categories');
 const productsRouter = require('./routes/products');
+const checkoutRouter = require('./routes/checkout');
 
 
 app.use(`${API}/`, authRouter);
