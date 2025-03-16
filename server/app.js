@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 require('dotenv/config');
 const authJwt = require('./middlewares/jwt');
 const errorHandler = require('./middlewares/error_handler');
+const authorizePostRequests = require('./middlewares/authorization');
 
 const app = express();
 const API = process.env.API_URL;
@@ -15,7 +16,7 @@ app.use(bodyParser.json());
 app.use(morgan('tiny'));
 app.use(cors());
 app.options('*', cors());
-
+app.use(authorizePostRequests)
 app.use(authJwt());
 app.use(errorHandler);
 
@@ -24,6 +25,7 @@ const usersRouter = require('./routes/users');
 const adminRouter = require('./routes/admin');
 const categoriesRouter = require('./routes/categories');
 const productsRouter = require('./routes/products');
+
 
 app.use(`${API}/`, authRouter);
 app.use(`${API}/users`, usersRouter);
