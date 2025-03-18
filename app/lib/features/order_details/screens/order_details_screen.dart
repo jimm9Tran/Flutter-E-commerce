@@ -239,7 +239,8 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                           Text(
                               "Ngày đặt hàng : ${DateFormat('yMMMd').format(DateTime.fromMillisecondsSinceEpoch(widget.order.orderedAt))}"),
                           Text("Mã đơn hàng   : ${widget.order.id}"),
-                          Text("Tổng giá trị   : ₫${widget.order.totalPrice}"),
+                          Text(
+                              "Tổng giá trị   : ₫${NumberFormat("#,###").format(widget.order.totalPrice)}"),
                           Text(
                               "Trạng thái        : ${getStatus(widget.order.status)}")
                         ],

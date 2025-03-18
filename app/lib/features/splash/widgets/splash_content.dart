@@ -24,7 +24,7 @@ class SplashContent extends StatelessWidget {
             ),
             SizedBox(width: mq.width * .03),
             Text(
-              "eSHOP",
+              "E-SHOP",
               style: TextStyle(
                 fontSize: 50,
                 color: Colors.orange.shade400,

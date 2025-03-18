@@ -286,7 +286,7 @@ class _TopCategoriesState extends State<TopCategories>
                                                           width:
                                                               double.infinity,
                                                           child: Text(
-                                                            "₫ ${NumberFormat("#,###").format(product.price)}", // Định dạng giá
+                                                            "${NumberFormat("#,###").format(product.price)}₫", // Định dạng giá
                                                             style: TextStyle(
                                                                 fontWeight:
                                                                     FontWeight

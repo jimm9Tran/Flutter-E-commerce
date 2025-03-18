@@ -1,18 +1,17 @@
-import 'package:ecommerce_major_project/features/account/screens/all_orders_screen.dart';
-import 'package:ecommerce_major_project/features/cart/screens/cart_screen.dart';
-import 'package:flutter/material.dart';
-
-import 'package:ecommerce_major_project/models/order.dart';
-import 'package:ecommerce_major_project/models/product.dart';
 import 'package:ecommerce_major_project/common/widgets/bottom_bar.dart';
-import 'package:ecommerce_major_project/features/home/screens/home_screen.dart';
-import 'package:ecommerce_major_project/features/auth/screens/auth_screen.dart';
-import 'package:ecommerce_major_project/features/search/screens/search_screen.dart';
+import 'package:ecommerce_major_project/features/account/screens/all_orders_screen.dart';
 import 'package:ecommerce_major_project/features/address/screens/address_screen.dart';
 import 'package:ecommerce_major_project/features/admin/screens/add_product_screen.dart';
+import 'package:ecommerce_major_project/features/auth/screens/auth_screen.dart';
+import 'package:ecommerce_major_project/features/cart/screens/cart_screen.dart';
 import 'package:ecommerce_major_project/features/home/screens/category_deals_screen.dart';
+import 'package:ecommerce_major_project/features/home/screens/home_screen.dart';
 import 'package:ecommerce_major_project/features/order_details/screens/order_details_screen.dart';
 import 'package:ecommerce_major_project/features/product_details/screens/product_detail_screen.dart';
+import 'package:ecommerce_major_project/features/search/screens/search_screen.dart';
+import 'package:ecommerce_major_project/models/order.dart';
+import 'package:ecommerce_major_project/models/product.dart';
+import 'package:flutter/material.dart';
 
 //all routes of the application
 Route<dynamic> generateRoute(RouteSettings routeSettings) {
@@ -91,7 +90,7 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => const Scaffold(
-          body: Center(child: Text("Screen does not exist!")),
+          body: Center(child: Text("Màn hình không tồn tại!")),
         ),
       );
   }

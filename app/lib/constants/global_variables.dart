@@ -49,53 +49,53 @@ class GlobalVariables {
 
   // STATIC IMAGES
   static const List<String> carouselImages = [
-    'https://images-eu.ssl-images-amazon.com/images/G/31/img21/Wireless/WLA/TS/D37847648_Accessories_savingdays_Jan22_Cat_PC_1500.jpg',
-    'https://images-eu.ssl-images-amazon.com/images/G/31/img2021/Vday/bwl/English.jpg',
-    'https://images-eu.ssl-images-amazon.com/images/G/31/img22/Wireless/AdvantagePrime/BAU/14thJan/D37196025_IN_WL_AdvantageJustforPrime_Jan_Mob_ingress-banner_1242x450.jpg',
-    'https://images-na.ssl-images-amazon.com/images/G/31/Symbol/2020/00NEW/1242_450Banners/PL31_copy._CB432483346_.jpg',
+    'https://authentic-shoes.com/wp-content/uploads/2025/01/the-north--scaled.webp',
+    'https://authentic-shoes.com/wp-content/uploads/2024/09/20240904091932-1.webp',
+    'https://authentic-shoes.com/wp-content/uploads/2024/12/Giay-Nau.webp',
+    'https://authentic-shoes.com/wp-content/uploads/2024/10/20240926111113-0.webp',
     'https://images-na.ssl-images-amazon.com/images/G/31/img21/shoes/September/SSW/pc-header._CB641971330_.jpg',
   ];
   static const List<Map<String, String>> categoryImages = [
     {
-      'title': 'Mobiles',
+      'title': 'Điện thoại',
       'image': 'assets/images/mobile-svg.svg',
     },
     {
-      'title': 'Essentials',
+      'title': 'Thiết yếu',
       'image': 'assets/images/essentials-svg.svg',
     },
     {
-      'title': 'Appliances',
+      'title': 'Thiết bị gia dụng',
       'image': 'assets/images/appliances-svg.svg',
     },
     {
-      'title': 'Books',
+      'title': 'Sách',
       'image': 'assets/images/books-svg.svg',
     },
     {
-      'title': 'Fashion',
+      'title': 'Thời trang',
       'image': 'assets/images/fashion-svg.svg',
     },
   ];
   static const List<Map<String, String>> categoryImages2 = [
     {
-      'title': 'Mobiles',
+      'title': 'Điện thoại',
       'image': 'assets/images/mobiles-category.jpg',
     },
     {
-      'title': 'Essentials',
+      'title': 'Thiết yếu',
       'image': 'assets/images/essentials-category.jpg',
     },
     {
-      'title': 'Appliances',
+      'title': 'Thiết bị gia dụng',
       'image': 'assets/images/appliances-category.jpg',
     },
     {
-      'title': 'Books',
+      'title': 'Sách',
       'image': 'assets/images/books-category.jpg',
     },
     {
-      'title': 'Fashion',
+      'title': 'Thời trang',
       'image': 'assets/images/fashion-category.jpg',
     },
   ];
