@@ -1,8 +1,9 @@
 import 'package:ecommerce_major_project/constants/global_variables.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '/providers/user_provider.dart';
+
 import '/main.dart';
+import '/providers/user_provider.dart';
 
 class AddressBox extends StatelessWidget {
   const AddressBox({super.key});
@@ -33,7 +34,7 @@ class AddressBox extends StatelessWidget {
             child: Padding(
               padding: EdgeInsets.only(left: mq.width * .0125),
               child: Text(
-                "Delivery to ${user.name} - ${user.address}",
+                "Địa chỉ  ${user.name} - ${user.address}",
                 style: TextStyle(
                     color: GlobalVariables.secondaryGreyTextColor,
                     fontWeight: FontWeight.w500,

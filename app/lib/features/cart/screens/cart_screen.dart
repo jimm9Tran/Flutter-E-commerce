@@ -1,17 +1,16 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import 'package:ecommerce_major_project/main.dart';
-import 'package:ecommerce_major_project/providers/user_provider.dart';
 import 'package:ecommerce_major_project/common/widgets/bottom_bar.dart';
-import 'package:ecommerce_major_project/constants/global_variables.dart';
 import 'package:ecommerce_major_project/common/widgets/custom_button.dart';
-import 'package:ecommerce_major_project/features/home/widgets/address_box.dart';
+import 'package:ecommerce_major_project/constants/global_variables.dart';
+import 'package:ecommerce_major_project/features/address/screens/address_screen.dart';
 import 'package:ecommerce_major_project/features/cart/widgets/cart_product.dart';
 import 'package:ecommerce_major_project/features/cart/widgets/cart_subtotal.dart';
+import 'package:ecommerce_major_project/features/home/widgets/address_box.dart';
 import 'package:ecommerce_major_project/features/search/screens/search_screen.dart';
-import 'package:ecommerce_major_project/features/address/screens/address_screen.dart';
 import 'package:ecommerce_major_project/features/search_delegate/my_search_screen.dart';
+import 'package:ecommerce_major_project/main.dart';
+import 'package:ecommerce_major_project/providers/user_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CartScreen extends StatefulWidget {
   static const String routeName = '/cart';
@@ -23,12 +22,10 @@ class CartScreen extends StatefulWidget {
 
 class _CartScreenState extends State<CartScreen> {
   void navigateToSearchScreen(String query) {
-    //make sure to pass the arguments here!
     Navigator.pushNamed(context, SearchScreen.routeName, arguments: query);
   }
 
   void navigateToAddress(num sum) {
-    //make sure to pass the arguments here!
     Navigator.pushNamed(context, AddressScreen.routeName,
         arguments: sum.toString());
   }
@@ -46,7 +43,7 @@ class _CartScreenState extends State<CartScreen> {
       appBar: GlobalVariables.getAppBar(
           context: context,
           wantBackNavigation: false,
-          title: "Your Cart",
+          title: "Giỏ hàng của bạn",
           onClickSearchNavigateTo: MySearchScreen()),
       body: SingleChildScrollView(
         child: Column(
@@ -58,7 +55,7 @@ class _CartScreenState extends State<CartScreen> {
               padding: EdgeInsets.all(mq.width * .025),
               child: CustomButton(
                   text:
-                      "Proceed to buy (${user.cart.length} ${user.cart.length == 1 ? 'item' : 'items'})",
+                      "Tiến hành mua (${user.cart.length} ${user.cart.length == 1 ? 'mặt hàng' : 'mặt hàng'})",
                   onTap: () =>
                       user.cart.isEmpty ? () {} : navigateToAddress(sum),
                   color: user.cart.isEmpty
@@ -75,31 +72,31 @@ class _CartScreenState extends State<CartScreen> {
                       children: [
                         Image.asset("assets/images/no-orderss.png",
                             height: mq.height * .15),
-                        const Text("No item in cart"),
+                        const Text("Không có mặt hàng nào trong giỏ hàng"),
                         SizedBox(height: mq.height * 0.02),
                         ElevatedButton(
-                            onPressed: () {
-                              Navigator.pushReplacementNamed(
-                                  context, BottomBar.routeName);
-                            },
-                            style: ElevatedButton.styleFrom(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(20)),
-                                backgroundColor: Colors.deepPurpleAccent),
-                            child: const Text(
-                              "Keep Exploring",
-                              style: TextStyle(color: Colors.white),
-                            )),
+                          onPressed: () {
+                            Navigator.pushReplacementNamed(
+                                context, BottomBar.routeName);
+                          },
+                          style: ElevatedButton.styleFrom(
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(20)),
+                              backgroundColor: Colors.deepPurpleAccent),
+                          child: const Text(
+                            "Tiếp tục khám phá",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
                       ],
                     )
                   : ListView.builder(
                       scrollDirection: Axis.vertical,
-                      // shrinkWrap: true,
                       itemCount: user.cart.length,
                       itemBuilder: (context, index) {
-                        // return CartProdcut
                         return CartProduct(index: index);
-                      }),
+                      },
+                    ),
             ),
           ],
         ),

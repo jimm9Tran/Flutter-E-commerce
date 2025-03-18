@@ -1,16 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import 'package:ecommerce_major_project/main.dart';
-import 'package:ecommerce_major_project/models/product.dart';
-import 'package:ecommerce_major_project/constants/global_variables.dart';
 import 'package:ecommerce_major_project/common/widgets/color_loader_2.dart';
-import 'package:ecommerce_major_project/features/home/services/home_services.dart';
-import 'package:ecommerce_major_project/features/home/screens/filters_screen.dart';
+import 'package:ecommerce_major_project/constants/global_variables.dart';
 import 'package:ecommerce_major_project/features/home/providers/filter_provider.dart';
+import 'package:ecommerce_major_project/features/home/screens/filters_screen.dart';
+import 'package:ecommerce_major_project/features/home/services/home_services.dart';
+import 'package:ecommerce_major_project/features/product_details/screens/product_detail_screen.dart';
 import 'package:ecommerce_major_project/features/search/widgets/searched_product.dart';
 import 'package:ecommerce_major_project/features/search_delegate/my_search_screen.dart';
-import 'package:ecommerce_major_project/features/product_details/screens/product_detail_screen.dart';
+import 'package:ecommerce_major_project/main.dart';
+import 'package:ecommerce_major_project/models/product.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CategoryDealsScreen extends StatefulWidget {
   static const String routeName = '/category-deals';
@@ -362,12 +361,6 @@ class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
   }
 }
 
-
-
-
-
-
-
 /*
 class CategoryDealsScreen extends StatefulWidget {
   static const String routeName = '/category-deals';
@@ -496,7 +489,6 @@ class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
 
 */
 
-
 /*
 
 class CategoryDealsScreen extends StatefulWidget {
@@ -598,4 +590,3 @@ class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
 
 
 */
-

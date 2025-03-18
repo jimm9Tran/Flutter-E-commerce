@@ -1,10 +1,9 @@
-import 'package:flutter/material.dart';
-
-import 'package:ecommerce_major_project/main.dart';
-import 'package:ecommerce_major_project/models/product.dart';
 import 'package:ecommerce_major_project/common/widgets/color_loader_2.dart';
 import 'package:ecommerce_major_project/features/home/services/home_services.dart';
 import 'package:ecommerce_major_project/features/product_details/screens/product_detail_screen.dart';
+import 'package:ecommerce_major_project/main.dart';
+import 'package:ecommerce_major_project/models/product.dart';
+import 'package:flutter/material.dart';
 
 class DealOfDay extends StatefulWidget {
   const DealOfDay({super.key});
@@ -47,7 +46,7 @@ class _DealOfDayState extends State<DealOfDay> {
                       // color: Colors.cyanAccent,
                       alignment: Alignment.topLeft,
                       padding: EdgeInsets.only(left: mq.width * .03),
-                      child: const Text("Deal of the Day",
+                      child: const Text("Sale trong ngày",
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.w800)),
                     ),

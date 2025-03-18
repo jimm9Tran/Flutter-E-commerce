@@ -1,9 +1,8 @@
-import 'package:flutter/material.dart';
-
-import 'package:ecommerce_major_project/main.dart';
 import 'package:ecommerce_major_project/constants/global_variables.dart';
-import 'package:ecommerce_major_project/features/search_delegate/my_search_screen.dart';
 import 'package:ecommerce_major_project/features/home/screens/category_deals_screen.dart';
+import 'package:ecommerce_major_project/features/search_delegate/my_search_screen.dart';
+import 'package:ecommerce_major_project/main.dart';
+import 'package:flutter/material.dart';
 
 class CategoryGridScreen extends StatelessWidget {
   CategoryGridScreen({super.key});
@@ -11,11 +10,11 @@ class CategoryGridScreen extends StatelessWidget {
   List<Map<String, String>> myCategoryList = GlobalVariables.categoryImages2;
 
   List<String> productCategories = [
-    "Mobiles",
-    "Essentials",
-    "Appliances",
-    "Books",
-    "Fashion"
+    "Điện thoại",
+    "Nhu yếu phẩm",
+    "Thiết bị gia dụng",
+    "Sách",
+    "Thời trang"
   ];
 
   void navigateToCategoryPage(BuildContext context, String category) {
@@ -30,7 +29,7 @@ class CategoryGridScreen extends StatelessWidget {
       appBar: GlobalVariables.getAppBar(
           context: context,
           wantBackNavigation: false,
-          title: "All Categories",
+          title: "Tất cả danh mục",
           onClickSearchNavigateTo: MySearchScreen()),
       body: GridView.builder(
         scrollDirection: Axis.vertical,
@@ -42,7 +41,6 @@ class CategoryGridScreen extends StatelessWidget {
             crossAxisCount: 2),
         itemCount: myCategoryList.length,
         itemBuilder: (context, index) {
-          // print("\n\nimage path is : ${myCategoryList[index]['title']}");
           final categoryTitle = myCategoryList[index]['title'];
           final categoryImage = myCategoryList[index]['image'];
 

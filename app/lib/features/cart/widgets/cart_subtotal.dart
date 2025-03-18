@@ -20,11 +20,11 @@ class CartSubtotal extends StatelessWidget {
       child: Row(
         children: [
           Text(
-            "Subtotal ",
+            "Tổng: ",
             style: TextStyle(fontSize: 18),
           ),
           Text(
-            "₹ ${sum.toStringAsFixed(2)}",
+            "${sum.toStringAsFixed(2)}đ",
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
           ),
         ],

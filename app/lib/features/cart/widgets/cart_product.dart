@@ -1,11 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
+import 'package:ecommerce_major_project/features/cart/services/cart_services.dart';
+import 'package:ecommerce_major_project/features/product_details/services/product_detail_services.dart';
 import 'package:ecommerce_major_project/main.dart';
 import 'package:ecommerce_major_project/models/product.dart';
 import 'package:ecommerce_major_project/providers/user_provider.dart';
-import 'package:ecommerce_major_project/features/cart/services/cart_services.dart';
-import 'package:ecommerce_major_project/features/product_details/services/product_detail_services.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CartProduct extends StatefulWidget {
   final int index;
@@ -29,7 +28,6 @@ class _CartProductState extends State<CartProduct> {
 
   @override
   Widget build(BuildContext context) {
-    // fetching the particular product
     final productCart = context.watch<UserProvider>().user.cart[widget.index];
     final product = Product.fromJson(productCart['product']);
     final quantity = productCart['quantity'];
@@ -40,7 +38,7 @@ class _CartProductState extends State<CartProduct> {
           margin: EdgeInsets.symmetric(horizontal: mq.width * .025),
           child: Row(
             children: [
-              // image
+              // Hình ảnh sản phẩm
               Image.network(
                 product.images[0],
                 fit: BoxFit.contain,
@@ -48,7 +46,7 @@ class _CartProductState extends State<CartProduct> {
                 width: mq.width * .25,
               ),
               SizedBox(width: mq.width * .01),
-              // description
+              // Mô tả sản phẩm
               Column(
                 children: [
                   Container(
@@ -78,8 +76,8 @@ class _CartProductState extends State<CartProduct> {
                     padding: EdgeInsets.only(left: mq.width * .025),
                     child: Text(
                       product.price < 500
-                          ? "Shipping charges might apply"
-                          : "Eligible for free shipping",
+                          ? "Có thể áp dụng phí vận chuyển"
+                          : "Đủ điều kiện miễn phí vận chuyển",
                       style: const TextStyle(fontSize: 13),
                     ),
                   ),
@@ -88,13 +86,13 @@ class _CartProductState extends State<CartProduct> {
                     padding: EdgeInsets.only(left: mq.width * .025),
                     child: product.quantity == 0
                         ? const Text(
-                            "Out of Stock",
+                            "Hết hàng",
                             style: TextStyle(
                                 color: Colors.redAccent, fontSize: 11),
                             maxLines: 2,
                           )
                         : const Text(
-                            "In Stock",
+                            "Còn hàng",
                             style: TextStyle(color: Colors.teal, fontSize: 11),
                             maxLines: 2,
                           ),

@@ -13,6 +13,7 @@ import 'package:ecommerce_major_project/models/product.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 
 class TopCategories extends StatefulWidget {
   const TopCategories({super.key});
@@ -23,12 +24,10 @@ class TopCategories extends StatefulWidget {
 
 class _TopCategoriesState extends State<TopCategories>
     with TickerProviderStateMixin {
-  // Tabbar variables
   int activeTabIndex = 0;
   late final TabController _tabController;
   final int _tabLength = 5;
 
-  // Products
   List<Product>? productList;
   final HomeServices homeServices = HomeServices();
   final ProductDetailServices productDetailServices = ProductDetailServices();
@@ -36,11 +35,11 @@ class _TopCategoriesState extends State<TopCategories>
   bool favSelected = false;
 
   List<String> categoriesList = [
-    "Mobiles",
-    "Essentials",
-    "Appliances",
-    "Books",
-    "Fashion",
+    "Điện thoại",
+    "Thiết yếu",
+    "Thiết bị gia dụng",
+    "Sách",
+    "Thời trang",
   ];
 
   @override
@@ -56,10 +55,7 @@ class _TopCategoriesState extends State<TopCategories>
   }
 
   void addToCart(String productName, Product product) {
-    print("Triggered add to cart <====");
-    print("Product is  : $productName");
     productDetailServices.addToCart(context: context, product: product);
-    print("Execution finished add to cart <====");
   }
 
   fetchCategoryProducts(String categoryName) async {
@@ -68,10 +64,6 @@ class _TopCategoriesState extends State<TopCategories>
       category: categoryName,
     );
     setState(() {});
-    if (productList != null && productList!.isNotEmpty) {
-      print(
-          "\n\n =======> Product List is :  =======> ${productList![0].name}");
-    }
   }
 
   @override
@@ -93,7 +85,7 @@ class _TopCategoriesState extends State<TopCategories>
                   setState(() {
                     activeTabIndex = index;
                   });
-                  if (productList == null || productList!.isEmpty) {
+                  if (productList == null) {
                     fetchCategoryProducts(categoriesList[activeTabIndex]);
                   }
                 },
@@ -125,31 +117,30 @@ class _TopCategoriesState extends State<TopCategories>
                           child: Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SvgPicture.asset(
-                                  GlobalVariables.categoryImages[index]
-                                      ['image']!,
-                                  height: 30,
-                                  color: activeTabIndex == index
-                                      ? Colors.white
-                                      : Colors.grey.shade700,
-                                ),
-                                SizedBox(width: mq.width * .015),
-                                Text(
-                                  GlobalVariables.categoryImages[index]
-                                      ['title']!,
-                                  style: TextStyle(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SvgPicture.asset(
+                                    GlobalVariables.categoryImages[index]
+                                        ['image']!,
+                                    height: 30,
                                     color: activeTabIndex == index
                                         ? Colors.white
                                         : Colors.grey.shade700,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w800,
                                   ),
-                                ),
-                              ],
-                            ),
+                                  SizedBox(width: mq.width * .015),
+                                  Text(
+                                    GlobalVariables.categoryImages[index]
+                                        ['title']!,
+                                    style: TextStyle(
+                                      color: activeTabIndex == index
+                                          ? Colors.white
+                                          : Colors.grey.shade700,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
+                                ]),
                           ),
                         ),
                       ),
@@ -165,41 +156,36 @@ class _TopCategoriesState extends State<TopCategories>
               }
               return false;
             },
-            child: Container(
-              height: mq.height * 0.45,
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  for (int i = 0; i < _tabLength; i++)
-                    Container(
-                      decoration: BoxDecoration(
-                        border: Border(
-                          top: BorderSide(
-                              color: Colors.grey.shade700, width: 0.4),
-                        ),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          // "See All" button
-                          Padding(
-                            padding:
-                                EdgeInsets.symmetric(vertical: mq.height * .008)
-                                    .copyWith(right: mq.height * .015),
-                            child: InkWell(
-                              onTap: () {
-                                navigateToCategoryPage(
-                                    context, categoriesList[activeTabIndex]);
-                              },
-                              child: Text("See All",
-                                  style: TextStyle(
-                                      color: Colors.grey.shade800,
-                                      fontWeight: FontWeight.w600)),
+            child: Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border(
+                    top: BorderSide(color: Colors.grey.shade700, width: 0.4),
+                  ),
+                ),
+                child: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    for (int i = 0; i < _tabLength; i++)
+                      SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                      vertical: mq.height * .008)
+                                  .copyWith(right: mq.height * .015),
+                              child: InkWell(
+                                onTap: () {
+                                  navigateToCategoryPage(
+                                      context, categoriesList[activeTabIndex]);
+                                },
+                                child: Text("Xem tất cả",
+                                    style: TextStyle(
+                                        color: Colors.grey.shade800,
+                                        fontWeight: FontWeight.w600)),
+                              ),
                             ),
-                          ),
-                          // GridView chứa danh sách sản phẩm
-                          Expanded(
-                            child: Container(
+                            Container(
                               decoration: BoxDecoration(
                                 border: Border(
                                   top: BorderSide(
@@ -208,23 +194,22 @@ class _TopCategoriesState extends State<TopCategories>
                                       color: Colors.grey.shade700, width: 0.4),
                                 ),
                               ),
+                              height: mq.height * 0.4,
                               child: productList == null
                                   ? const ColorLoader2()
                                   : productList!.isEmpty
                                       ? const Center(
-                                          child: Text("No item to fetch"))
+                                          child: Text("Không có sản phẩm"))
                                       : GridView.builder(
                                           scrollDirection: Axis.vertical,
-                                          physics:
-                                              const BouncingScrollPhysics(),
+                                          physics: BouncingScrollPhysics(),
                                           padding: EdgeInsets.symmetric(
                                             horizontal: mq.width * .04,
                                           ),
-                                          // Giảm childAspectRatio để giảm chiều cao của card
                                           gridDelegate:
                                               const SliverGridDelegateWithFixedCrossAxisCount(
                                             crossAxisCount: 2,
-                                            childAspectRatio: 0.70,
+                                            childAspectRatio: 0.72,
                                             mainAxisSpacing: 15,
                                             crossAxisSpacing: 15,
                                           ),
@@ -234,13 +219,14 @@ class _TopCategoriesState extends State<TopCategories>
                                             Product product =
                                                 productList![index];
                                             bool isProductAvailable =
-                                                product.quantity == 0;
+                                                productList![index].quantity ==
+                                                    0;
                                             return Stack(
                                               alignment:
                                                   AlignmentDirectional.topEnd,
                                               children: [
                                                 Card(
-                                                  color: const Color.fromARGB(
+                                                  color: Color.fromARGB(
                                                       255, 254, 252, 255),
                                                   elevation: 2.5,
                                                   shape: RoundedRectangleBorder(
@@ -249,182 +235,146 @@ class _TopCategoriesState extends State<TopCategories>
                                                             15),
                                                   ),
                                                   child: Padding(
-                                                    padding: EdgeInsets.symmetric(
-                                                        horizontal:
-                                                            mq.width * .025,
-                                                        vertical: mq.width *
-                                                            .015), // giảm padding dọc
-                                                    child: ClipRect(
-                                                      // ClipRect giúp cắt bớt phần tràn
-                                                      child: Column(
-                                                        mainAxisSize:
-                                                            MainAxisSize.min,
-                                                        children: [
-                                                          InkWell(
-                                                            onTap: () {
-                                                              Navigator
-                                                                  .pushNamed(
-                                                                context,
-                                                                ProductDetailScreen
-                                                                    .routeName,
-                                                                arguments:
-                                                                    product,
-                                                              );
-                                                            },
-                                                            child: Container(
-                                                              height:
-                                                                  mq.height *
-                                                                      .15,
-                                                              width:
-                                                                  mq.width * .4,
-                                                              child:
-                                                                  Image.network(
-                                                                product
-                                                                    .images[0],
-                                                                fit: BoxFit
-                                                                    .contain,
-                                                              ),
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                              height:
-                                                                  mq.height *
-                                                                      .005),
-                                                          SizedBox(
-                                                            width:
-                                                                double.infinity,
-                                                            child: Text(
-                                                              product.name,
-                                                              maxLines: 1,
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .start,
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                            width:
-                                                                double.infinity,
-                                                            child: Text(
-                                                              // Chuyển giá sang VNĐ, không hiển thị thập phân
-                                                              "₫ ${product.price.toStringAsFixed(0)}",
-                                                              style: const TextStyle(
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .start,
-                                                            ),
-                                                          ),
-                                                          Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: [
-                                                              TextButton.icon(
-                                                                style: TextButton.styleFrom(
-                                                                    shape: RoundedRectangleBorder(
-                                                                        borderRadius:
-                                                                            BorderRadius.circular(
-                                                                                10)),
-                                                                    backgroundColor:
-                                                                        Colors
-                                                                            .grey
-                                                                            .shade200),
-                                                                onPressed: () {
-                                                                  homeServices.addToWishList(
-                                                                      context:
-                                                                          context,
-                                                                      product:
-                                                                          product);
-                                                                  showSnackBar(
-                                                                      context:
-                                                                          context,
-                                                                      text:
-                                                                          "Added to WishList",
-                                                                      onTapFunction:
-                                                                          () {
-                                                                        Navigator.of(context)
-                                                                            .push(GlobalVariables.createRoute(WishListScreen()));
-                                                                      },
-                                                                      actionLabel:
-                                                                          "View");
-                                                                },
-                                                                icon: const Icon(
-                                                                    CupertinoIcons
-                                                                        .add,
-                                                                    size: 18,
-                                                                    color: Colors
-                                                                        .black87),
-                                                                label: const Text(
-                                                                    "WishList",
-                                                                    style: TextStyle(
-                                                                        color: Colors
-                                                                            .black87)),
-                                                              ),
-                                                              InkWell(
-                                                                onTap:
-                                                                    isProductAvailable
-                                                                        ? () {
-                                                                            showSnackBar(
-                                                                                context: context,
-                                                                                text: "Product out of stock");
-                                                                          }
-                                                                        : () {
-                                                                            addToCart(product.name,
-                                                                                product);
-                                                                            showSnackBar(
-                                                                                context: context,
-                                                                                text: "Added to cart");
-                                                                          },
-                                                                child: const Icon(
-                                                                    CupertinoIcons
-                                                                        .cart_badge_plus,
-                                                                    size: 35),
-                                                              ),
-                                                            ],
-                                                          )
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                InkWell(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      // Có thể set trạng thái favorite nếu cần
-                                                    });
-                                                  },
-                                                  child: Container(
-                                                    margin:
-                                                        const EdgeInsets.only(
-                                                            top: 10, right: 10),
                                                     padding:
-                                                        const EdgeInsets.all(3),
-                                                    decoration:
-                                                        const BoxDecoration(
-                                                            color: Colors.black,
-                                                            shape: BoxShape
-                                                                .circle),
-                                                    child: Icon(Icons.favorite,
-                                                        color: favSelected
-                                                            ? Colors.red
-                                                            : Colors.white,
-                                                        size: 17),
+                                                        EdgeInsets.symmetric(
+                                                            horizontal:
+                                                                mq.width * .025,
+                                                            vertical:
+                                                                mq.width * .02),
+                                                    child: Column(
+                                                      children: [
+                                                        InkWell(
+                                                          onTap: () {
+                                                            Navigator.pushNamed(
+                                                              context,
+                                                              ProductDetailScreen
+                                                                  .routeName,
+                                                              arguments:
+                                                                  product,
+                                                            );
+                                                          },
+                                                          child: Container(
+                                                            height:
+                                                                mq.height * .15,
+                                                            width:
+                                                                mq.width * .4,
+                                                            child:
+                                                                Image.network(
+                                                              product.images[0],
+                                                              fit: BoxFit
+                                                                  .contain,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                            height: mq.height *
+                                                                .005),
+                                                        SizedBox(
+                                                          width:
+                                                              double.infinity,
+                                                          child: Text(
+                                                            product.name,
+                                                            maxLines: 1,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                            textAlign:
+                                                                TextAlign.start,
+                                                          ),
+                                                        ),
+                                                        SizedBox(
+                                                          width:
+                                                              double.infinity,
+                                                          child: Text(
+                                                            "₫ ${NumberFormat("#,###").format(product.price)}", // Định dạng giá
+                                                            style: TextStyle(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                            textAlign:
+                                                                TextAlign.start,
+                                                          ),
+                                                        ),
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            TextButton.icon(
+                                                              style: TextButton.styleFrom(
+                                                                  shape: RoundedRectangleBorder(
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              10)),
+                                                                  backgroundColor:
+                                                                      Colors
+                                                                          .grey
+                                                                          .shade200),
+                                                              onPressed: () {
+                                                                homeServices.addToWishList(
+                                                                    context:
+                                                                        context,
+                                                                    product:
+                                                                        product);
+                                                                showSnackBar(
+                                                                    context:
+                                                                        context,
+                                                                    text:
+                                                                        "Đã thêm vào danh sách yêu thích",
+                                                                    onTapFunction:
+                                                                        () {
+                                                                      Navigator.of(
+                                                                              context)
+                                                                          .push(
+                                                                              GlobalVariables.createRoute(WishListScreen()));
+                                                                    },
+                                                                    actionLabel:
+                                                                        "Xem");
+                                                              },
+                                                              icon: const Icon(
+                                                                  CupertinoIcons
+                                                                      .add,
+                                                                  size: 18,
+                                                                  color: Colors
+                                                                      .black87),
+                                                              label: const Text(
+                                                                  "wishlist",
+                                                                  style: TextStyle(
+                                                                      color: Colors
+                                                                          .black87)),
+                                                            ),
+                                                            Container(
+                                                              child: InkWell(
+                                                                  onTap:
+                                                                      isProductAvailable
+                                                                          ? () {
+                                                                              showSnackBar(context: context, text: "Sản phẩm hết hàng");
+                                                                            }
+                                                                          : () {
+                                                                              addToCart(product.name, product);
+                                                                              showSnackBar(context: context, text: "Đã thêm vào giỏ hàng");
+                                                                            },
+                                                                  child: const Icon(
+                                                                      CupertinoIcons
+                                                                          .cart_badge_plus,
+                                                                      size:
+                                                                          35)),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
                                               ],
                                             );
                                           }),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),

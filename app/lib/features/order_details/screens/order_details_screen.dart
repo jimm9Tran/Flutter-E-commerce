@@ -1,8 +1,4 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-
 import 'package:ecommerce_major_project/common/widgets/custom_button.dart';
 import 'package:ecommerce_major_project/constants/global_variables.dart';
 import 'package:ecommerce_major_project/constants/utils.dart';
@@ -12,6 +8,9 @@ import 'package:ecommerce_major_project/features/search_delegate/my_search_scree
 import 'package:ecommerce_major_project/main.dart';
 import 'package:ecommerce_major_project/models/order.dart';
 import 'package:ecommerce_major_project/providers/user_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class OrderDetailsScreen extends StatefulWidget {
   static const String routeName = "/order-details";
@@ -37,11 +36,9 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
   }
 
   void navigateToSearchScreen(String query) {
-    //make sure to pass the arguments here!
     Navigator.pushNamed(context, SearchScreen.routeName, arguments: query);
   }
 
-  // only for admins
   void changeOrderStatus(int status) {
     adminServices.changeOrderStatus(
         context: context,
@@ -56,7 +53,6 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
         });
   }
 
-  // find the number of dayssince the order was placed
   int daysBetween(DateTime from, DateTime to) {
     from = DateTime(from.year, from.month, from.day);
     to = DateTime(to.year, to.month, to.day);
@@ -77,7 +73,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
     final user = Provider.of<UserProvider>(context).user;
     return Scaffold(
       appBar: GlobalVariables.getAppBar(
-          title: "Order Details",
+          title: "Chi tiết đơn hàng",
           context: context,
           onClickSearchNavigateTo: MySearchScreen()),
       body: SingleChildScrollView(
@@ -86,7 +82,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text("Product(s) purchased",
+              const Text("Sản phẩm đã mua",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500)),
               Container(
                 width: double.infinity,
@@ -103,8 +99,6 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                           Image.network(widget.order.products[i].images[0],
                               height: mq.width * .25, width: mq.width * .25),
                           SizedBox(width: mq.width * .0125),
-                          // using expanded to allow text to overflow
-                          // in case name of the product is too long
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -119,9 +113,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 Text(
-                                  "Qty : ${widget.order.quantity[i]}",
-                                  // style: TextStyle(
-                                  //     fontSize: 17, fontWeight: FontWeight.bold),
+                                  "Số lượng : ${widget.order.quantity[i]}",
                                 )
                               ],
                             ),
@@ -133,7 +125,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
               ),
               SizedBox(height: mq.width * .025),
               const Text(
-                "Tracking",
+                "Theo dõi",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
               ),
               Container(
@@ -148,7 +140,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     controlsBuilder: (context, details) {
                       if (user.type == "admin") {
                         return CustomButton(
-                            text: "Done",
+                            text: "Hoàn tất",
                             onTap: () =>
                                 changeOrderStatus(details.currentStep));
                       }
@@ -157,36 +149,33 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                     currentStep: currentStep,
                     steps: <Step>[
                       Step(
-                        title: const Text("Pending"),
-                        content:
-                            const Text("Your order is yet to be delivered"),
+                        title: const Text("Chờ xử lý"),
+                        content: const Text("Đơn hàng của bạn chưa được giao"),
                         isActive: currentStep > 0,
                         state: currentStep > 0
                             ? StepState.complete
                             : StepState.indexed,
                       ),
                       Step(
-                        // title: Text("Shipping"),
-                        title: const Text("Completed"),
-                        content: const Text("Your are order has been shipped"),
+                        title: const Text("Đã giao"),
+                        content: const Text("Đơn hàng của bạn đã được giao"),
                         isActive: currentStep > 1,
                         state: currentStep > 1
                             ? StepState.complete
                             : StepState.indexed,
                       ),
                       Step(
-                        title: const Text("Received"),
+                        title: const Text("Đã nhận"),
                         content: const Text(
-                            "Your order has been delievered successfully"),
+                            "Đơn hàng của bạn đã được nhận thành công"),
                         isActive: currentStep > 2,
                         state: currentStep > 2
                             ? StepState.complete
                             : StepState.indexed,
                       ),
                       Step(
-                        // title: Text("Completed"),
-                        title: const Text("Delivered"),
-                        content: const Text("Your order is completed."),
+                        title: const Text("Hoàn thành"),
+                        content: const Text("Đơn hàng của bạn đã hoàn tất."),
                         isActive: currentStep >= 3,
                         state: currentStep >= 3
                             ? StepState.complete
@@ -202,22 +191,20 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                           ? () {
                               showSnackBar(
                                   context: context,
-                                  text: "Return product yet to be implemented");
+                                  text:
+                                      "Chức năng trả lại sản phẩm chưa được triển khai");
                             }
                           : () {
-                              // if you still want to complain flow in didilogflow chatbot
-                              // you can mail the authorities or anything
                               showErrorSnackBar(
                                   context: context,
-                                  text: "Return product timeline expired");
+                                  text: "Hạn trả lại sản phẩm đã hết");
                             },
                       style: ElevatedButton.styleFrom(
-                          // alignment: Alignment.center,
                           backgroundColor: allowReturn
                               ? const Color.fromARGB(255, 255, 100, 100)
                               : const Color.fromARGB(255, 255, 168, 168)),
                       child: const Text(
-                        "Return Product",
+                        "Trả lại sản phẩm",
                         style: TextStyle(color: Colors.white),
                       )),
               SizedBox(height: mq.width * .025),
@@ -229,7 +216,7 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                 },
                 child: Row(
                   children: [
-                    const Text("More Details",
+                    const Text("Chi tiết hơn",
                         style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w400,
@@ -249,13 +236,12 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // format date using intl package
                           Text(
-                              "Order Date   : ${DateFormat('yMMMd').format(DateTime.fromMillisecondsSinceEpoch(widget.order.orderedAt))}"),
-                          Text("Order ID        : ${widget.order.id}"),
-                          Text("Order Total   : ₹${widget.order.totalPrice}"),
+                              "Ngày đặt hàng : ${DateFormat('yMMMd').format(DateTime.fromMillisecondsSinceEpoch(widget.order.orderedAt))}"),
+                          Text("Mã đơn hàng   : ${widget.order.id}"),
+                          Text("Tổng giá trị   : ₫${widget.order.totalPrice}"),
                           Text(
-                              "Status            : ${getStatus(widget.order.status)}")
+                              "Trạng thái        : ${getStatus(widget.order.status)}")
                         ],
                       ),
                     )
@@ -272,23 +258,23 @@ class _OrderDetailsScreenState extends State<OrderDetailsScreen> {
     String setStatus = "";
     switch (status) {
       case 0:
-        setStatus = "Pending";
+        setStatus = "Chờ xử lý";
         break;
 
       case 1:
-        setStatus = "Completed";
+        setStatus = "Đã giao";
         break;
 
       case 2:
-        setStatus = "Received";
+        setStatus = "Đã nhận";
         break;
 
       case 3:
-        setStatus = "Delivered";
+        setStatus = "Hoàn thành";
         break;
 
       default:
-        setStatus = "Status unknown";
+        setStatus = "Trạng thái không xác định";
         break;
     }
     return setStatus;
