@@ -88,7 +88,7 @@ class _AuthScreenState extends State<AuthScreen> {
                               ),
                             ),
                             SizedBox(height: mq.height * .03),
-                            const Text("E-Shop",
+                            const Text("JM-Shop",
                                 style: TextStyle(
                                     fontWeight: FontWeight.w500, fontSize: 25)),
                             SizedBox(height: mq.height * .05),

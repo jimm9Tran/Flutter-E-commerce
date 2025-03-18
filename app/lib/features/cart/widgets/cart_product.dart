@@ -4,6 +4,7 @@ import 'package:ecommerce_major_project/main.dart';
 import 'package:ecommerce_major_project/models/product.dart';
 import 'package:ecommerce_major_project/providers/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart'; // Import thư viện intl
 import 'package:provider/provider.dart';
 
 class CartProduct extends StatefulWidget {
@@ -31,6 +32,13 @@ class _CartProductState extends State<CartProduct> {
     final productCart = context.watch<UserProvider>().user.cart[widget.index];
     final product = Product.fromJson(productCart['product']);
     final quantity = productCart['quantity'];
+
+    // Định dạng giá tiền Việt Nam
+    final currencyFormat = NumberFormat.currency(
+      locale: 'vi_VN',
+      symbol: '₫',
+      decimalDigits: 0,
+    );
 
     return Column(
       children: [
@@ -65,7 +73,7 @@ class _CartProductState extends State<CartProduct> {
                     padding: EdgeInsets.only(
                         left: mq.width * .025, top: mq.width * .0125),
                     child: Text(
-                      "₹ ${product.price.toStringAsFixed(2)}",
+                      "${currencyFormat.format(product.price)}", // Hiển thị giá với định dạng tiền Việt Nam
                       style: const TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 15),
                       maxLines: 2,
@@ -74,12 +82,15 @@ class _CartProductState extends State<CartProduct> {
                   Container(
                     width: mq.width * .57,
                     padding: EdgeInsets.only(left: mq.width * .025),
-                    child: Text(
-                      product.price < 500
-                          ? "Có thể áp dụng phí vận chuyển"
-                          : "Đủ điều kiện miễn phí vận chuyển",
-                      style: const TextStyle(fontSize: 13),
-                    ),
+                    child: product.price < 500
+                        ? const Text(
+                            "Có thể áp dụng phí vận chuyển",
+                            style: TextStyle(fontSize: 13),
+                          )
+                        : const Text(
+                            "Đủ điều kiện miễn phí vận chuyển",
+                            style: TextStyle(fontSize: 13),
+                          ),
                   ),
                   Container(
                     width: mq.width * .57,

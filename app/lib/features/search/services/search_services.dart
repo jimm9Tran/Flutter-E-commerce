@@ -1,14 +1,12 @@
 import 'dart:convert';
 
+import 'package:ecommerce_major_project/constants/global_variables.dart';
+import 'package:ecommerce_major_project/constants/utils.dart';
+import 'package:ecommerce_major_project/models/product.dart';
+import 'package:ecommerce_major_project/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-
-import 'package:ecommerce_major_project/models/product.dart';
-import 'package:ecommerce_major_project/constants/utils.dart';
-import 'package:ecommerce_major_project/providers/user_provider.dart';
-import 'package:ecommerce_major_project/constants/error_handling.dart';
-import 'package:ecommerce_major_project/constants/global_variables.dart';
 
 class SearchServices {
   Future<List<Product>> fetchSearchedProduct(
@@ -23,31 +21,33 @@ class SearchServices {
           'x-auth-token': userProvider.user.token,
         },
       );
-      var data = jsonDecode(res.body);
 
-      // List listLength = jsonDecode(res.body);
-      //jsonEncode => [object] to a JSON string.
-      //jsonDecode => String to JSON object.
-      if (context.mounted) {
-        httpErrorHandle(
-          //handling the http errors quiet efficiently
-          response: res,
+      // print('Response status: ${res.statusCode}');
+      // print('Response body: ${res.body}');
+
+      if (res.statusCode == 200) {
+        var data = jsonDecode(res.body);
+        if (data is List) {
+          for (Map<String, dynamic> item in data) {
+            productList.add(Product.fromJson(item));
+          }
+        } else {
+          showSnackBar(
+            context: context,
+            text: "Dữ liệu trả về không đúng định dạng.",
+          );
+        }
+      } else {
+        showSnackBar(
           context: context,
-          onSuccess: () {
-            for (Map<String, dynamic> item in data) {
-              // print(item['name']);
-              productList.add(Product.fromJson(item));
-            }
-          },
+          text: "Lỗi trong việc lấy dữ liệu: ${res.statusCode}",
         );
       }
-
-      // print("Products length : ${jsonDecode(res.body).length}");
     } catch (e) {
       showSnackBar(
-          context: context,
-          text:
-              "Following Error in fetching Products [Search] : ${e.toString()}");
+        context: context,
+        text: "Lỗi khi tìm kiếm sản phẩm: ${e.toString()}",
+      );
     }
     return productList;
   }

@@ -8,9 +8,7 @@ import 'package:ecommerce_major_project/features/search_delegate/my_search_scree
 import 'package:ecommerce_major_project/main.dart';
 import 'package:ecommerce_major_project/providers/user_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:pay/pay.dart';
 import 'package:provider/provider.dart';
-import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class AddressScreen extends StatefulWidget {
   static const String routeName = '/address';
@@ -28,37 +26,11 @@ class _AddressScreenState extends State<AddressScreen> {
   TextEditingController pincodeController = TextEditingController();
   TextEditingController flatBuildingController = TextEditingController();
 
-  int totalAmount = 0;
-  int currentStep = 0;
   bool goToPayment = false;
   String addressToBeUsed = "";
-  final _razorpay = Razorpay();
-  bool goToFinalPayment = false;
-  List<PaymentItem> paymentItems = [];
   final _addressFormKey = GlobalKey<FormState>();
   final AddressServices addressServices = AddressServices();
-  List<String> checkoutSteps = ["Địa chỉ", "Vận chuyển", "Thanh toán"];
-
-  late final Future<PaymentConfiguration> _googlePayConfigFuture;
-
-  @override
-  void initState() {
-    super.initState();
-    _googlePayConfigFuture =
-        PaymentConfiguration.fromAsset("google_pay_config.json");
-    paymentItems.add(
-      PaymentItem(
-        label: 'Tổng tiền',
-        amount: widget.totalAmount,
-        status: PaymentItemStatus.final_price,
-      ),
-    );
-
-    _razorpay.on(Razorpay.EVENT_PAYMENT_SUCCESS, _handlePaymentSuccess);
-    _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
-    _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
-    totalAmount = double.parse(widget.totalAmount).toInt();
-  }
+  List<String> checkoutSteps = ["Địa chỉ", "Vận chuyển", "Đặt hàng"];
 
   @override
   void dispose() {
@@ -67,28 +39,6 @@ class _AddressScreenState extends State<AddressScreen> {
     pincodeController.dispose();
     flatBuildingController.dispose();
     super.dispose();
-  }
-
-  void onGooglePayResult(paymentResult) {
-    if (Provider.of<UserProvider>(context, listen: false)
-        .user
-        .address
-        .isEmpty) {
-      addressServices.saveUserAddress(
-          context: context, address: addressToBeUsed);
-    }
-
-    addressServices.placeOrder(
-        context: context,
-        address: addressToBeUsed,
-        totalSum: num.parse(widget.totalAmount));
-  }
-
-  void payPressed(String addressFromProvider) {
-    addressServices.placeOrder(
-        context: context,
-        address: addressToBeUsed,
-        totalSum: num.parse(widget.totalAmount));
   }
 
   void deliverToThisAddress(String addressFromProvider) {
@@ -107,7 +57,7 @@ class _AddressScreenState extends State<AddressScreen> {
           goToPayment = true;
         });
       } else {
-        throw Exception("Vui lòng nhập đầy đủ thông tin");
+        showSnackBar(context: context, text: "Vui lòng nhập đầy đủ thông tin");
       }
     } else if (addressFromProvider.isNotEmpty) {
       addressToBeUsed = addressFromProvider;
@@ -118,6 +68,7 @@ class _AddressScreenState extends State<AddressScreen> {
       showSnackBar(context: context, text: "Lỗi trong phần địa chỉ");
     }
 
+    // Lưu địa chỉ nếu người dùng chưa có địa chỉ được lưu
     if (Provider.of<UserProvider>(context, listen: false)
         .user
         .address
@@ -125,6 +76,57 @@ class _AddressScreenState extends State<AddressScreen> {
       addressServices.saveUserAddress(
           context: context, address: addressToBeUsed);
     }
+  }
+
+  void placeOrder() {
+    // Gọi hàm từ AddressServices để lưu đơn hàng xuống database
+    addressServices.placeOrder(
+      context: context,
+      address: addressToBeUsed,
+      totalSum: num.parse(widget.totalAmount),
+    );
+
+    // Hiển thị thông báo đơn hàng thành công
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+          side: const BorderSide(color: Colors.black12, width: 4),
+        ),
+        title: Image.asset("assets/images/croppedsuccess.gif", height: 150),
+        content: Padding(
+          padding: const EdgeInsets.only(top: 20.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                "Đặt hàng thành công",
+                style: TextStyle(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 18,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 10),
+              Text(
+                "Mã đơn hàng: 1234567890\nThời gian: ${DateTime.now().hour}:${DateTime.now().minute}",
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              // Sau khi đặt hàng thành công, có thể điều hướng về màn hình chính hoặc trang đơn hàng của người dùng.
+            },
+            child: const Text("OK"),
+          )
+        ],
+      ),
+    );
   }
 
   @override
@@ -138,13 +140,14 @@ class _AddressScreenState extends State<AddressScreen> {
         appBar: GlobalVariables.getAppBar(
           context: context,
           onClickSearchNavigateTo: MySearchScreen(),
-          title: "Thanh toán",
+          title: "Đặt hàng",
         ),
         body: SingleChildScrollView(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: mq.width * .02),
             child: Column(
               children: [
+                // Hiển thị các bước checkout
                 SizedBox(
                   width: mq.width * .8,
                   height: mq.height * .06,
@@ -164,7 +167,7 @@ class _AddressScreenState extends State<AddressScreen> {
                           Container(
                             height: mq.height * .004,
                             width: mq.width * .3,
-                            color: goToFinalPayment
+                            color: goToPayment
                                 ? Colors.black
                                 : Colors.grey.shade400,
                           ),
@@ -178,13 +181,11 @@ class _AddressScreenState extends State<AddressScreen> {
                               elevation: 2,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(15),
-                                side: i == 0
+                                side: (i == 0) ||
+                                        (goToPayment && i == 1) ||
+                                        (goToPayment && i == 2)
                                     ? const BorderSide(width: 1.5)
-                                    : goToPayment && i == 1
-                                        ? const BorderSide(width: 1.5)
-                                        : goToFinalPayment && i == 2
-                                            ? const BorderSide(width: 1.5)
-                                            : BorderSide.none,
+                                    : BorderSide.none,
                               ),
                               child: Container(
                                 padding: EdgeInsets.all(mq.height * .01),
@@ -197,6 +198,7 @@ class _AddressScreenState extends State<AddressScreen> {
                     ],
                   ),
                 ),
+                // Nếu người dùng đã xác nhận địa chỉ thì hiển thị tóm tắt đơn hàng và nút "Đặt hàng"
                 goToPayment
                     ? Column(
                         children: [
@@ -206,44 +208,26 @@ class _AddressScreenState extends State<AddressScreen> {
                               child: const Text("Tóm tắt đơn hàng",
                                   style: TextStyle(fontSize: 20))),
                           SizedBox(height: mq.height * .02),
-                          SizedBox(
-                            child: ListView.builder(
-                                scrollDirection: Axis.vertical,
-                                physics: BouncingScrollPhysics(),
-                                shrinkWrap: true,
-                                itemCount: user.cart.length,
-                                itemBuilder: (context, index) {
-                                  return DeliveryProduct(index: index);
-                                }),
+                          ListView.builder(
+                            scrollDirection: Axis.vertical,
+                            physics: const BouncingScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: user.cart.length,
+                            itemBuilder: (context, index) {
+                              return DeliveryProduct(index: index);
+                            },
                           ),
                           SizedBox(height: mq.height * .02),
                           CustomButton(
-                              text: "Thanh toán ngay",
-                              onTap: () {
-                                setState(() {
-                                  goToFinalPayment = true;
-                                });
-                                var options = {
-                                  'key': 'rzp_test_7NBmERXaABkUpY',
-                                  'amount': 100 * totalAmount,
-                                  'name': 'AKR Company',
-                                  'description': 'Hóa đơn Ecommerce',
-                                  'prefill': {
-                                    'contact': '8888888888',
-                                    'email': 'test@razorpay.com'
-                                  }
-                                };
-
-                                try {
-                                  _razorpay.open(options);
-                                } catch (e) {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(content: Text("Lỗi : $e")));
-                                }
-                              },
-                              color: const Color.fromARGB(255, 108, 255, 255)),
+                            text: "Đặt hàng",
+                            onTap: () {
+                              placeOrder();
+                            },
+                            color: const Color.fromARGB(255, 108, 255, 255),
+                          ),
                         ],
                       )
+                    // Nếu chưa chọn địa chỉ, hiển thị form nhập địa chỉ hoặc địa chỉ có sẵn của người dùng
                     : Column(
                         children: [
                           const Text("Chọn địa chỉ giao hàng",
@@ -252,9 +236,7 @@ class _AddressScreenState extends State<AddressScreen> {
                               ? Container(
                                   width: double.infinity,
                                   decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.black12,
-                                    ),
+                                    border: Border.all(color: Colors.black12),
                                   ),
                                   child: Padding(
                                     padding: EdgeInsets.all(mq.width * .025),
@@ -267,9 +249,7 @@ class _AddressScreenState extends State<AddressScreen> {
                               : Container(
                                   width: double.infinity,
                                   decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.black12,
-                                    ),
+                                    border: Border.all(color: Colors.black12),
                                   ),
                                   child: Padding(
                                     padding: EdgeInsets.all(mq.width * .025),
@@ -297,21 +277,25 @@ class _AddressScreenState extends State<AddressScreen> {
                             child: Column(
                               children: [
                                 CustomTextField(
-                                    controller: flatBuildingController,
-                                    hintText: "Tòa nhà, Số nhà"),
+                                  controller: flatBuildingController,
+                                  hintText: "Tòa nhà, Số nhà",
+                                ),
                                 SizedBox(height: mq.height * .01),
                                 CustomTextField(
-                                    controller: areaController,
-                                    hintText: "Khu vực, Đường"),
+                                  controller: areaController,
+                                  hintText: "Khu vực, Đường",
+                                ),
                                 SizedBox(height: mq.height * .01),
                                 CustomTextField(
-                                    controller: pincodeController,
-                                    hintText: "Mã bưu điện",
-                                    inputType: TextInputType.number),
+                                  controller: pincodeController,
+                                  hintText: "Mã bưu điện",
+                                  inputType: TextInputType.number,
+                                ),
                                 SizedBox(height: mq.height * .01),
                                 CustomTextField(
-                                    controller: cityController,
-                                    hintText: "Thành phố/Tỉnh"),
+                                  controller: cityController,
+                                  hintText: "Thành phố/Tỉnh",
+                                ),
                                 SizedBox(height: mq.height * .04),
                                 CustomButton(
                                   text: "Giao đến địa chỉ này",
@@ -329,69 +313,6 @@ class _AddressScreenState extends State<AddressScreen> {
             ),
           ),
         ),
-      ),
-    );
-  }
-
-  void _handlePaymentSuccess(PaymentSuccessResponse response) {
-    print(
-        "\n\nThanh toán thành công : \n\nMã thanh toán :  ${response.paymentId} \n\n Mã đơn hàng : ${response.orderId} \n\n Chữ ký : ${response.signature}");
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Thành công"),
-        content: Text(
-            "Mã thanh toán : ${response.paymentId}\nMã đơn hàng : ${response.orderId}\nChữ ký : ${response.signature}"),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text("OK"),
-          )
-        ],
-      ),
-    );
-  }
-
-  void _handlePaymentError(PaymentFailureResponse response) {
-    print(
-        "Lỗi thanh toán ==> Mã lỗi : ${response.code} \nThông báo : ${response.message}  ");
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Oops, có lỗi xảy ra"),
-        content: Text(
-            "Lỗi thanh toán ==> Mã lỗi : ${response.code} \nThông báo : ${response.message}"),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text("OK"),
-          )
-        ],
-      ),
-    );
-  }
-
-  void _handleExternalWallet(ExternalWalletResponse response) {
-    print("Ví ngoài : ${response.walletName}");
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text("Ví ngoài"),
-        content: Text("Ví ngoài : ${response.walletName}"),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: const Text("OK"),
-          )
-        ],
       ),
     );
   }

@@ -1,4 +1,3 @@
-import 'package:ecommerce_major_project/common/widgets/bottom_bar.dart';
 import 'package:ecommerce_major_project/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -61,7 +60,7 @@ class GlobalVariables {
       'image': 'assets/images/mobile-svg.svg',
     },
     {
-      'title': 'Thiết yếu',
+      'title': 'Hàng tiêu dùng',
       'image': 'assets/images/essentials-svg.svg',
     },
     {
@@ -83,7 +82,7 @@ class GlobalVariables {
       'image': 'assets/images/mobiles-category.jpg',
     },
     {
-      'title': 'Thiết yếu',
+      'title': 'Hàng tiêu dùng',
       'image': 'assets/images/essentials-category.jpg',
     },
     {
@@ -126,21 +125,13 @@ class GlobalVariables {
       title: Text("$title",
           style: appBarTextStyle, maxLines: 1, overflow: TextOverflow.ellipsis),
       iconTheme: const IconThemeData(color: Colors.black),
-      // automaticallyImplyLeading: true,
       leading: Padding(
         padding: EdgeInsets.all(mq.width * .025).copyWith(right: 0),
         child: wantBackNavigation!
             ? IconButton(
                 icon: const Icon(Icons.arrow_back),
                 onPressed: () => Navigator.pop(context))
-            : InkWell(
-                onTap: () {
-                  Navigator.pushReplacementNamed(context, BottomBar.routeName);
-                },
-                child: Image.asset(
-                  "assets/images/logo.png",
-                ),
-              ),
+            : Container(),
       ),
       backgroundColor: Colors.white,
       elevation: 2,
@@ -162,12 +153,6 @@ class GlobalVariables {
                       ),
                     ),
                     SizedBox(width: mq.width * .04),
-                    InkWell(
-                        onTap: () {
-                          // Scaffold.of(context).openDrawer();
-                          // _scaffoldKey.currentState!.openEndDrawer();
-                        },
-                        child: const Icon(Icons.mic, size: 30)),
                   ],
                 ),
               ),
@@ -184,15 +169,9 @@ class GlobalVariables {
       title: Text("$title",
           style: appBarTextStyle, maxLines: 1, overflow: TextOverflow.ellipsis),
       iconTheme: const IconThemeData(color: Colors.black),
-      // automaticallyImplyLeading: true,
       leading: Padding(
         padding: EdgeInsets.all(mq.width * .025).copyWith(right: 0),
-        child: InkWell(
-          onTap: () {},
-          child: Image.asset(
-            "assets/images/logo.png",
-          ),
-        ),
+        child: Container(),
       ),
       backgroundColor: Colors.white,
       elevation: 2,

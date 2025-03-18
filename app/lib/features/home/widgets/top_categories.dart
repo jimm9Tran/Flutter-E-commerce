@@ -169,6 +169,8 @@ class _TopCategoriesState extends State<TopCategories>
                     for (int i = 0; i < _tabLength; i++)
                       SingleChildScrollView(
                         child: Column(
+                          mainAxisSize: MainAxisSize
+                              .min, // Đảm bảo chiều cao Column là vừa đủ
                           children: [
                             Padding(
                               padding: EdgeInsets.symmetric(
