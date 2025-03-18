@@ -70,41 +70,16 @@ class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
       appBar: GlobalVariables.getAppBar(
           context: context,
           wantBackNavigation: true,
-          title: "All results in ${widget.category}",
+          title: "Tất cả kết quả trong ${widget.category}",
           onClickSearchNavigateTo: MySearchScreen()),
       body: productList == null
           ? const ColorLoader2()
           : Column(
               children: [
-                // SizedBox(height: mq.height * .01),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // Row(
-                    //   children: [
-                    //     Image.asset(height: 30, "assets/images/elite.jpg"),
-                    //     // Text("elite"),
-                    //     SizedBox(
-                    //       height: 40,
-                    //       width: 50,
-                    //       child: FittedBox(
-                    //         fit: BoxFit.fill,
-                    //         child: Switch(
-                    //           activeColor: Colors.blue,
-                    //           thumbColor: thumbColor,
-                    //           thumbIcon: thumbIcon,
-                    //           value: light1,
-                    //           onChanged: (bool value) {
-                    //             setState(() {
-                    //               light1 = value;
-                    //             });
-                    //           },
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
                     InkWell(
                       onTap: () {
                         Navigator.of(context)
@@ -113,9 +88,7 @@ class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: const [
-                          // Divider(
-                          //     height: 10, thickness: 20, color: Colors.grey),
-                          Text("Filters(1)"),
+                          Text("Bộ lọc (1)"),
                           Icon(Icons.arrow_drop_down),
                         ],
                       ),
@@ -123,10 +96,6 @@ class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
                   ],
                 ),
                 Divider(color: Colors.grey, thickness: mq.height * .001),
-
-                // const AddressBox(),
-                // SizedBox(height: mq.width * .025),
-
                 filterProvider.filterNumber == 1
                     ? getFilterNameList(filterProvider)
                     : filterProvider.filterNumber == 2
@@ -139,21 +108,8 @@ class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
                                   physics: BouncingScrollPhysics(),
                                   itemCount: productList!.length,
                                   itemBuilder: (context, index) {
-                                    var map = productList!;
-                                    // print(
-                                    //     "Type of productlist.....................${map[index].}");
-
-                                    // productList!
-                                    //     .sort((a, b) => a.brandName.contains("d"));
-
-                                    print(
-                                        "product list now..............${productList![index].name}, ");
-                                    // var sortedByKeyMap = Map.fromEntries(map.entries.toList()
-                                    //   ..sort((e1, e2) => e1.key.compareTo(e2.key)));
                                     return Column(
                                       children: [
-                                        // Text(
-                                        //     "Filter  : ${filterProvider.getFilterNumber}"),
                                         GestureDetector(
                                             onTap: () {
                                               Navigator.pushNamed(context,
@@ -163,8 +119,6 @@ class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
                                             },
                                             child: SearchedProduct(
                                                 product: productList![index])),
-                                        // Divider(
-                                        //     color: Colors.grey, thickness: mq.height * .001)
                                       ],
                                     );
                                   },
@@ -172,86 +126,10 @@ class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
                               )
               ],
             ),
-      /*
-            Column(
-                children: [
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      'Keep shopping for ${widget.category}',
-                      style: const TextStyle(
-                        fontSize: 20,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    height: 170,
-                    child: GridView.builder(
-                      scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.only(left: 15),
-                      itemCount: productList!.length,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 1,
-                        childAspectRatio: 1.4,
-                      ),
-                      itemBuilder: (context, index) {
-                        Product product = productList![index];
-                        return GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(
-                              context,
-                              ProductDetailScreen.routeName,
-                              arguments: product,
-                            );
-                          },
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                height: 130,
-                                child: DecoratedBox(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.black12,
-                                      width: 0.5,
-                                    ),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(10),
-                                    child: Image.network(
-                                      product.images[0],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                alignment: Alignment.topLeft,
-                                padding: const EdgeInsets.only(
-                                  left: 0,
-                                  top: 5,
-                                  right: 15,
-                                ),
-                                child: Text(
-                                  product.name,
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              ),
-      */
     );
   }
 
-  getFilterNameList(FilterProvider filterProvider) {
+  Widget getFilterNameList(FilterProvider filterProvider) {
     List<Product>? filterOneList = productList;
     filterOneList!.sort((a, b) => a.brandName.compareTo(b.brandName));
 
@@ -261,25 +139,15 @@ class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
         physics: BouncingScrollPhysics(),
         itemCount: filterOneList.length,
         itemBuilder: (context, index) {
-          // print(
-          //     "Type of productlist.....................${map[index].}");
-
-          // productList!
-          //     .sort((a, b) => a.brandName.contains("d"));
-
-          // var sortedByKeyMap = Map.fromEntries(map.entries.toList()
-          //   ..sort((e1, e2) => e1.key.compareTo(e2.key)));
           return Column(
             children: [
-              Text("Filter  : ${filterProvider.getFilterNumber}"),
+              Text("Bộ lọc: ${filterProvider.getFilterNumber}"),
               GestureDetector(
                   onTap: () {
                     Navigator.pushNamed(context, ProductDetailScreen.routeName,
                         arguments: filterOneList[index]);
                   },
                   child: SearchedProduct(product: filterOneList[index])),
-              // Divider(
-              //     color: Colors.grey, thickness: mq.height * .001)
             ],
           );
         },
@@ -287,7 +155,7 @@ class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
     );
   }
 
-  getFilterpriceLtoH(FilterProvider filterProvider) {
+  Widget getFilterpriceLtoH(FilterProvider filterProvider) {
     List<Product>? filterOneList = productList;
     filterOneList!.sort((a, b) => a.price.compareTo(b.price));
 
@@ -297,25 +165,15 @@ class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
         physics: BouncingScrollPhysics(),
         itemCount: filterOneList.length,
         itemBuilder: (context, index) {
-          // print(
-          //     "Type of productlist.....................${map[index].}");
-
-          // productList!
-          //     .sort((a, b) => a.brandName.contains("d"));
-
-          // var sortedByKeyMap = Map.fromEntries(map.entries.toList()
-          //   ..sort((e1, e2) => e1.key.compareTo(e2.key)));
           return Column(
             children: [
-              Text("Filter  : ${filterProvider.getFilterNumber}"),
+              Text("Bộ lọc: ${filterProvider.getFilterNumber}"),
               GestureDetector(
                   onTap: () {
                     Navigator.pushNamed(context, ProductDetailScreen.routeName,
                         arguments: filterOneList[index]);
                   },
                   child: SearchedProduct(product: filterOneList[index])),
-              // Divider(
-              //     color: Colors.grey, thickness: mq.height * .001)
             ],
           );
         },
@@ -323,7 +181,7 @@ class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
     );
   }
 
-  getFilterpriceHtoL(FilterProvider filterProvider) {
+  Widget getFilterpriceHtoL(FilterProvider filterProvider) {
     List<Product>? filterOneList = productList;
     filterOneList!.sort((a, b) => a.price.compareTo(b.price));
 
@@ -333,17 +191,8 @@ class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
         physics: BouncingScrollPhysics(),
         itemCount: filterOneList.length,
         itemBuilder: (context, index) {
-          // print(
-          //     "Type of productlist.....................${map[index].}");
-
-          // productList!
-          //     .sort((a, b) => a.brandName.contains("d"));
-
-          // var sortedByKeyMap = Map.fromEntries(map.entries.toList()
-          //   ..sort((e1, e2) => e1.key.compareTo(e2.key)));
           return Column(
             children: [
-              // Text("Filter  : ${filterProvider.getFilterNumber}"),
               GestureDetector(
                   onTap: () {
                     Navigator.pushNamed(context, ProductDetailScreen.routeName,
@@ -351,8 +200,6 @@ class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
                   },
                   child: SearchedProduct(
                       product: filterOneList.reversed.toList()[index])),
-              // Divider(
-              //     color: Colors.grey, thickness: mq.height * .001)
             ],
           );
         },
@@ -360,233 +207,3 @@ class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
     );
   }
 }
-
-/*
-class CategoryDealsScreen extends StatefulWidget {
-  static const String routeName = '/category-deals';
-  final String category;
-  const CategoryDealsScreen({
-    Key? key,
-    required this.category,
-  }) : super(key: key);
-
-  @override
-  State<CategoryDealsScreen> createState() => _CategoryDealsScreenState();
-}
-
-class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
-  List<Product>? productList;
-  final HomeServices homeServices = HomeServices();
-
-  @override
-  void initState() {
-    super.initState();
-    fetchCategoryProducts();
-  }
-
-  fetchCategoryProducts() async {
-    productList = await homeServices.fetchCategoryProducts(
-      context: context,
-      category: widget.category,
-    );
-    setState(() {});
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(mq.height * 0.06),
-        child: AppBar(
-          flexibleSpace: Container(
-              decoration: const BoxDecoration(
-                  gradient: GlobalVariables.appBarGradient)),
-          title: Text(
-            widget.category,
-            style: const TextStyle(
-                color: Colors.black, fontStyle: FontStyle.normal, fontSize: 20),
-          ),
-        ),
-      ),
-      body: productList == null
-          ? const Loader()
-          : Column(
-              children: [
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    'Keep shopping for ${widget.category}',
-                    style: const TextStyle(
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: 170,
-                  child: GridView.builder(
-                    // cacheExtent: ,
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.only(left: 15),
-                    itemCount: productList!.length,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 1, childAspectRatio: 1.3),
-                    itemBuilder: (context, index) {
-                      final product = productList![index];
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            ProductDetailScreen.routeName,
-                            arguments: product,
-                          );
-                        },
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: 130,
-                              child: DecoratedBox(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: Colors.black12,
-                                    width: 0.5,
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(10),
-                                  child: Image.network(
-                                    product.images[0],
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Container(
-                              alignment: Alignment.topLeft,
-                              padding: const EdgeInsets.only(
-                                left: 0,
-                                top: 5,
-                                right: 15,
-                              ),
-                              child: Text(
-                                product.name,
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-    );
-  }
-}
-
-
-*/
-
-/*
-
-class CategoryDealsScreen extends StatefulWidget {
-  static const String routeName = '/category-deals';
-  final String category;
-  const CategoryDealsScreen({required this.category, super.key});
-
-  @override
-  State<CategoryDealsScreen> createState() => _CategoryDealsScreenState();
-}
-
-class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
-  List<Product>? productList = [];
-  final HomeServices homeServices = HomeServices();
-
-  @override
-  void initState() {
-    super.initState();
-    fetchCategoryProducts();
-  }
-
-  fetchCategoryProducts() async {
-    productList = await homeServices.fetchCategoryProducts(
-        context: context, category: widget.category);
-    setState(() {});
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(mq.height * 0.06),
-        child: AppBar(
-          flexibleSpace: Container(
-              decoration: const BoxDecoration(
-                  gradient: GlobalVariables.appBarGradient)),
-          title: Text(
-            widget.category,
-            style: const TextStyle(
-                color: Colors.black, fontStyle: FontStyle.normal, fontSize: 20),
-          ),
-        ),
-      ),
-      body: productList == null
-          ? const Loader()
-          : Column(
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: mq.width * .0375, vertical: mq.width * .025),
-                  alignment: Alignment.topLeft,
-                  child: Text("Keep shopping for ${widget.category}",
-                      style: TextStyle(fontSize: 20)),
-                ),
-                SizedBox(
-                  height: mq.height * .2,
-                  child: GridView.builder(
-                      itemCount: productList!.length,
-                      scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.only(left: 50),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 1,
-                        childAspectRatio: 1.4,
-                        mainAxisSpacing: 10,
-                      ),
-                      itemBuilder: (context, index) {
-                        final product = productList![index];
-
-                        return Column(
-                          // textBaseline: TextBaseline. ,
-                          // mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            // Container(
-                            //   transform: Matrix4.compose(Velocity(pixelsPerSecond: pixelsPerSecond) , rotation, scale),
-                            // ),
-                            SizedBox(
-                              height: mq.height * .15,
-                              child: DecoratedBox(
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                      color: Colors.black12, width: 0.5),
-                                ),
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(10),
-                              child: Image.network(product.images[0]),
-                            )
-                          ],
-                        );
-                      }),
-                ),
-              ],
-            ),
-    );
-  }
-}
-
-
-*/

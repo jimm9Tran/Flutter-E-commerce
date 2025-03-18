@@ -2,6 +2,16 @@ import 'package:ecommerce_major_project/common/widgets/stars.dart';
 import 'package:ecommerce_major_project/main.dart';
 import 'package:ecommerce_major_project/models/product.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+String formatPriceToVND(double price) {
+  final formatter = NumberFormat.currency(
+    locale: 'vi_VN',
+    symbol: '₫',
+    decimalDigits: 0,
+  );
+  return formatter.format(price);
+}
 
 class SearchedProduct extends StatelessWidget {
   final Product product;
@@ -10,13 +20,10 @@ class SearchedProduct extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double totalRating = 0.0;
-
     for (int i = 0; i < product.rating!.length; i++) {
       totalRating += product.rating![i].rating;
     }
-
     double avgRating = 0.0;
-
     if (totalRating != 0) {
       avgRating = totalRating / product.rating!.length;
     }
@@ -40,11 +47,14 @@ class SearchedProduct extends StatelessWidget {
                 ),
                 // Mô tả sản phẩm
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
                       width: mq.width * .57,
                       padding: EdgeInsets.only(
-                          left: mq.width * .025, top: mq.width * .0125),
+                        left: mq.width * .025,
+                        top: mq.width * .0125,
+                      ),
                       child: Text(
                         product.name,
                         textAlign: TextAlign.left,
@@ -56,17 +66,23 @@ class SearchedProduct extends StatelessWidget {
                     Container(
                       width: mq.width * .57,
                       padding: EdgeInsets.only(
-                          left: mq.width * .025, top: mq.width * .0125),
+                        left: mq.width * .025,
+                        top: mq.width * .0125,
+                      ),
                       child: Stars(rating: avgRating),
                     ),
                     Container(
                       width: mq.width * .57,
                       padding: EdgeInsets.only(
-                          left: mq.width * .025, top: mq.width * .0125),
+                        left: mq.width * .025,
+                        top: mq.width * .0125,
+                      ),
                       child: Text(
-                        "₫ ${product.price.toStringAsFixed(2)}",
+                        formatPriceToVND(product.price.toDouble()),
                         style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 15),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
                         maxLines: 2,
                       ),
                     ),
@@ -81,7 +97,9 @@ class SearchedProduct extends StatelessWidget {
                     Container(
                       width: mq.width * .57,
                       padding: EdgeInsets.only(
-                          left: mq.width * .025, top: mq.width * .0125),
+                        left: mq.width * .025,
+                        top: mq.width * .0125,
+                      ),
                       child: product.quantity == 0
                           ? const Text(
                               "Hết hàng",
@@ -89,10 +107,12 @@ class SearchedProduct extends StatelessWidget {
                                   color: Colors.redAccent, fontSize: 11),
                               maxLines: 2,
                             )
-                          : const Text("Còn hàng",
+                          : const Text(
+                              "Còn hàng",
                               style:
                                   TextStyle(color: Colors.teal, fontSize: 11),
-                              maxLines: 2),
+                              maxLines: 2,
+                            ),
                     ),
                   ],
                 )

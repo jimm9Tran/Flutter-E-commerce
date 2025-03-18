@@ -11,7 +11,7 @@ class CategoryGridScreen extends StatelessWidget {
 
   List<String> productCategories = [
     "Điện thoại",
-    "Nhu yếu phẩm",
+    "Hàng tiêu dùng",
     "Thiết bị gia dụng",
     "Sách",
     "Thời trang"

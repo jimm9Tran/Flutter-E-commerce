@@ -1,12 +1,11 @@
 import 'dart:io';
 
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:image_picker/image_picker.dart';
-
+import 'package:ecommerce_major_project/features/account/services/account_services.dart';
 import 'package:ecommerce_major_project/main.dart';
 import 'package:ecommerce_major_project/providers/user_provider.dart';
-import 'package:ecommerce_major_project/features/account/services/account_services.dart';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class BelowAppBar extends StatefulWidget {
   const BelowAppBar({super.key});
@@ -35,7 +34,7 @@ class _BelowAppBarState extends State<BelowAppBar> {
         children: [
           RichText(
             text: TextSpan(
-                text: "Hello, ",
+                text: "Xin chào, ",
                 style: const TextStyle(fontSize: 22, color: Colors.black),
                 children: [
                   TextSpan(
