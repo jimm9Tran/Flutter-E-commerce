@@ -19,7 +19,7 @@ class _PostsScreenState extends State<PostsScreen> {
   List<Product>? products = [];
   final AdminServices adminServices = AdminServices();
 
-  // Goto add product screen
+  // Điều hướng đến màn hình thêm sản phẩm
   void navigateToAddProduct() {
     Navigator.pushNamed(context, AddProductScreen.routeName);
   }
@@ -30,7 +30,7 @@ class _PostsScreenState extends State<PostsScreen> {
     fetchAllProducts();
   }
 
-  // Fetch all products
+  // Lấy tất cả sản phẩm
   fetchAllProducts() async {
     products = await adminServices.fetchAllProducts(context);
     setState(() {});
@@ -46,12 +46,12 @@ class _PostsScreenState extends State<PostsScreen> {
     return Scaffold(
       appBar: GlobalVariables.getAdminAppBar(
         context: context,
-        title: "Posts Screen",
+        title: "Màn hình sản phẩm",
       ),
       body: products!.isEmpty
           ? const Center(
               child: Text(
-                "Add some products to sell",
+                "Thêm sản phẩm để bán",
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w500,
@@ -77,7 +77,6 @@ class _PostsScreenState extends State<PostsScreen> {
                         image: productData.images[0],
                       ),
                     ),
-                    // Bọc Row trong Flexible để giới hạn không gian và tránh overflow
                     Flexible(
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -97,7 +96,7 @@ class _PostsScreenState extends State<PostsScreen> {
                                 onSuccess: () {
                                   showSnackBar(
                                     context: context,
-                                    text: "Item deleted successfully",
+                                    text: "Sản phẩm đã được xóa thành công",
                                   );
                                 },
                               );
@@ -119,8 +118,8 @@ class _PostsScreenState extends State<PostsScreen> {
             borderRadius: BorderRadius.circular(15),
           ),
           onPressed: navigateToAddProduct,
-          tooltip: "Add a product",
-          child: const Icon(Icons.add),
+          tooltip: "Thêm sản phẩm",
+          child: const Icon(Icons.add, color: Colors.white),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndFloat,

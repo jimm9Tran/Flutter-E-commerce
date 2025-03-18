@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
-
 import 'package:ecommerce_major_project/models/user.dart';
+import 'package:flutter/material.dart';
 
 class MyEndDrawer extends StatefulWidget {
   User user;
@@ -20,47 +19,35 @@ class _MyEndDrawerState extends State<MyEndDrawer> {
     Icons.contact_phone_rounded
   ];
   List<String> iconNames = [
-    "Home",
-    "Explore",
-    "Theme",
-    "Bookmarks",
-    "Topics",
-    "Contact Us"
+    "Trang chủ",
+    "Khám phá",
+    "Chủ đề",
+    "Đã lưu",
+    "Chủ đề",
+    "Liên hệ"
   ];
 
   @override
   Widget build(BuildContext context) {
     final myUser = widget.user;
     return Drawer(
-      // shape: RoundedRectangleBorder(
-      //   borderRadius: BorderRadius.circular(30),
-      // ),
-
       child: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-              colors: [
-                Color.fromRGBO(249, 249, 249, 1),
-                Color.fromRGBO(19, 19, 19, 1),
-              ],
-              // begin: Alignment.topCenter,
-              end: Alignment.bottomRight,
-              /*
-	                      About stops :  The stops list, if specified, must have the same length as colors.
-                            It specifies fractions of the vector from start to end, between 0.0 and 1.0, for each color. 
-	                      If it is null, a uniform distribution is assumed.
-                      */
-              stops: [0.85, 0.2]),
+            colors: [
+              Color.fromRGBO(249, 249, 249, 1),
+              Color.fromRGBO(19, 19, 19, 1),
+            ],
+            end: Alignment.bottomRight,
+            stops: [0.85, 0.2],
+          ),
         ),
         child: ListView(
           scrollDirection: Axis.vertical,
           children: [
             UserAccountsDrawerHeader(
               decoration: BoxDecoration(color: Colors.deepOrange[500]),
-
-              //current logged in userName
               accountName: Text(myUser.name),
-              //current logged in userEmail
               accountEmail: Text(myUser.email),
               currentAccountPicture: Container(
                 decoration: BoxDecoration(
@@ -100,7 +87,7 @@ class _MyEndDrawerState extends State<MyEndDrawer> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      "LogOut",
+                      "Đăng xuất",
                       style: TextStyle(
                         fontWeight: FontWeight.w800,
                         fontSize: 15,

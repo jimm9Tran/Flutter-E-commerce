@@ -1,20 +1,20 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:cloudinary_public/cloudinary_public.dart';
+import 'package:ecommerce_major_project/constants/error_handling.dart';
+import 'package:ecommerce_major_project/constants/global_variables.dart';
+import 'package:ecommerce_major_project/constants/utils.dart';
+import 'package:ecommerce_major_project/features/auth/screens/auth_screen.dart';
+import 'package:ecommerce_major_project/models/order.dart';
+import 'package:ecommerce_major_project/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import 'package:cloudinary_public/cloudinary_public.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:ecommerce_major_project/models/order.dart';
-import 'package:ecommerce_major_project/constants/utils.dart';
-import 'package:ecommerce_major_project/providers/user_provider.dart';
-import 'package:ecommerce_major_project/constants/error_handling.dart';
-import 'package:ecommerce_major_project/constants/global_variables.dart';
-import 'package:ecommerce_major_project/features/auth/screens/auth_screen.dart';
-
 class AccountServices {
+  // Lấy tất cả các đơn hàng của người dùng
   getAllOrders({required BuildContext context}) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
@@ -33,12 +33,7 @@ class AccountServices {
     }
   }
 
-//
-//
-//
-//
-//
-
+  // Thêm ảnh đại diện người dùng
   void addProfilePicture(
       {required BuildContext context, required File imagePicked}) async {
     final user = Provider.of<UserProvider>(context, listen: false).user;
@@ -53,19 +48,6 @@ class AccountServices {
       );
       imageUrl = cloudinaryResponse.secureUrl;
 
-      // Product product = Product(
-      //   name: name,
-      //   description: description,
-      //   brandName: brandName,
-      // quantity: quantity,
-      //   images: imageUrls,
-      //   category: category,
-      //   price: price,
-      // );
-
-      //use jsonEncode before sending the body to POST request
-      // var bodyPostReq = jsonEncode(user.toJson());
-
       http.Response res = await http.post(
         Uri.parse('$uri/api/add-profile-picture'),
         headers: {
@@ -73,7 +55,6 @@ class AccountServices {
           'x-auth-token': user.token,
         },
         body: jsonEncode({'imageUrl': imageUrl}),
-        // body: product.toJson(),
       );
 
       if (context.mounted) {
@@ -82,8 +63,7 @@ class AccountServices {
           context: context,
           onSuccess: () {
             showSnackBar(
-                context: context,
-                text: 'Profile picture updated successfully!');
+                context: context, text: 'Cập nhật ảnh đại diện thành công!');
           },
         );
       }
@@ -92,14 +72,7 @@ class AccountServices {
     }
   }
 
-//
-//
-//
-//
-//
-//
-//
-//
+  // Lấy danh sách đơn hàng của người dùng
   Future<List<Order>?> fetchMyOrders({required BuildContext context}) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     List<Order>? orderList = [];
@@ -111,17 +84,10 @@ class AccountServices {
       });
 
       if (context.mounted) {
-        // print(
-        //     "quantity : \n\n${jsonEncode(jsonDecode(res.body)[0]).runtimeType}");
-        // print("response : \n\n${jsonDecode(res.body)[1]}");
         httpErrorHandle(
           response: res,
           context: context,
           onSuccess: () {
-            // for (Map<String, dynamic> item in data) {
-            //   // print(item['name']);
-            //   orderList.add(Order.fromJson(item));
-            // }
             for (int i = 0; i < jsonDecode(res.body).length; i++) {
               orderList.add(
                 Order.fromJson(
@@ -133,18 +99,15 @@ class AccountServices {
             }
           },
         );
-        // print("response  : \n\n${orderList[0]}");
-        // print("price type : \n\n${orderList[0].price.runtimeType}");
-        // print("quantity type : \n\n${orderList[0].quantity.runtimeType}");
       }
     } catch (e) {
       showSnackBar(
-          context: context,
-          text: "Following Error in fetching Products [home]: $e");
+          context: context, text: "Có lỗi khi lấy thông tin đơn hàng: $e");
     }
     return orderList;
   }
 
+  // Đăng xuất người dùng
   void logOut(BuildContext context) async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -154,7 +117,7 @@ class AccountServices {
             context, AuthScreen.routeName, (route) => false);
       }
     } catch (e) {
-      showSnackBar(context: context, text: "Error in logging out : $e");
+      showSnackBar(context: context, text: "Lỗi khi đăng xuất: $e");
     }
   }
 }

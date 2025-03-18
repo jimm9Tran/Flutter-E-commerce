@@ -2,10 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloudinary_public/cloudinary_public.dart';
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:provider/provider.dart';
-
 import 'package:ecommerce_major_project/constants/error_handling.dart';
 import 'package:ecommerce_major_project/constants/global_variables.dart';
 import 'package:ecommerce_major_project/constants/utils.dart';
@@ -13,6 +9,9 @@ import 'package:ecommerce_major_project/features/admin/models/sales.dart';
 import 'package:ecommerce_major_project/models/order.dart';
 import 'package:ecommerce_major_project/models/product.dart';
 import 'package:ecommerce_major_project/providers/user_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 
 class AdminServices {
   void sellProduct({
@@ -47,7 +46,6 @@ class AdminServices {
         price: price,
       );
 
-      //use jsonEncode before sending the body to POST request
       var bodyPostReq = jsonEncode(product.toJson());
 
       http.Response res = await http.post(
@@ -57,7 +55,6 @@ class AdminServices {
           'x-auth-token': userProvider.user.token,
         },
         body: bodyPostReq,
-        // body: product.toJson(),
       );
 
       if (context.mounted) {
@@ -65,7 +62,8 @@ class AdminServices {
           response: res,
           context: context,
           onSuccess: () {
-            showSnackBar(context: context, text: 'Product Added Successfully!');
+            showSnackBar(
+                context: context, text: 'Sản phẩm đã được thêm thành công!');
             Navigator.pop(context);
           },
         );
@@ -75,7 +73,6 @@ class AdminServices {
     }
   }
 
-  // get all the products
   Future<List<Product>> fetchAllProducts(BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     List<Product> productList = [];
@@ -92,18 +89,7 @@ class AdminServices {
           response: res,
           context: context,
           onSuccess: () {
-            // for (int i = 0; i < jsonDecode(res.body).length; i++) {
-            //   productList.add(
-            //     Product.fromJson(
-            //       jsonEncode(
-            //         jsonDecode(res.body)[i],
-            //       ),
-            //     ),
-            //   );
-            // }
-
             for (Map<String, dynamic> item in data) {
-              // print(item['name']);
               productList.add(Product.fromJson(item));
             }
           },
@@ -115,7 +101,6 @@ class AdminServices {
     return productList;
   }
 
-  // get all the products
   Future<List<Order>> fetchAllOrders(BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     List<Order> orderList = [];
@@ -132,18 +117,7 @@ class AdminServices {
           response: res,
           context: context,
           onSuccess: () {
-            // for (int i = 0; i < jsonDecode(res.body).length; i++) {
-            //   productList.add(
-            //     Product.fromJson(
-            //       jsonEncode(
-            //         jsonDecode(res.body)[i],
-            //       ),
-            //     ),
-            //   );
-            // }
-
             for (Map<String, dynamic> item in data) {
-              // print(item['name']);
               orderList.add(Order.fromJson(jsonEncode(item)));
             }
           },
@@ -155,106 +129,11 @@ class AdminServices {
     return orderList;
   }
 
-  // void sellProduct({
-  //   required BuildContext context,
-  //   required String name,
-  //   required String description,
-  //   required num price,
-  //   required num quantity,
-  //   required String category,
-  //   required List<File> images,
-  // }) async {
-  //   final userProvider = Provider.of<UserProvider>(context, listen: false);
-  //   try {
-  //     //upload the images
-  //     final cloudinary = CloudinaryPublic('dyqymg02u', 'ktdtolon');
-  //     List<String> imageUrls = [];
-  //     for (int i = 0; i < images.length; i++) {
-  //       CloudinaryResponse res = await cloudinary
-  //           .uploadFile(CloudinaryFile.fromFile(images[i].path, folder: name));
-  //       imageUrls.add(res.secureUrl);
-  //     }
-  //     Product product = Product(
-  //       name: name,
-  //       description: description,
-  //       quantity: quantity,
-  //       category: category,
-  //       images: imageUrls,
-  //       price: price,
-  //     );
-
-  //     http.Response res = await http.post(
-  //       Uri.parse("$uri/admin/add-product"),
-  //       headers: <String, String>{
-  //         'Content-Type': 'application/json; charset=UTF-8',
-  //         'x-auth-token': userProvider.user.token,
-  //       },
-  //       body: product.toJson(),
-  //     );
-
-  //     //use context ensuring the mounted property across async functions
-  //     if (context.mounted) {
-  //       httpErrorHandle(
-  //         response: res,
-  //         context: context,
-  //         onSuccess: () {
-  //           showSnackBar(context: context, text: "Product added sucessfully!");
-  //           Navigator.pop(context);
-  //         },
-  //       );
-  //     }
-  //   } catch (e) {
-  //     showSnackBar(context: context, text: e.toString());
-  //   }
-  // }
-
-  // //get all products
-  // Future<List<Product>> fetchAllProducts(BuildContext context) async {
-  //   final userProvider = Provider.of<UserProvider>(context, listen: false);
-  //   List<Product> productList = [];
-
-  //   try {
-  //     http.Response res = await http
-  //         .get(Uri.parse("$uri/admin/get-products"), headers: <String, String>{
-  //       'Content-Type': 'application/json; charset=UTF-8',
-  //       'x-auth-token': userProvider.user.token,
-  //     });
-
-  //     // List listLength = jsonDecode(res.body);
-  //     //jsonEncode => [object] to a JSON string.
-  //     //jsonDecode => String to JSON object.
-  //     if (context.mounted) {
-  //       httpErrorHandle(
-  //         response: res,
-  //         context: context,
-  //         onSuccess: () {
-  //           for (int i = 0; i < jsonDecode(res.body).length; i++) {
-  //             productList.add(
-  //               Product.fromJson(
-  //                 jsonEncode(
-  //                   jsonDecode(res.body)[i],
-  //                 ),
-  //               ),
-  //             );
-  //           }
-  //         },
-  //       );
-  //     }
-  //     // print("Products length : ${jsonDecode(res.body).length}");
-  //   } catch (e) {
-  //     showSnackBar(
-  //         context: context,
-  //         text: "Following Error in fetching Products : ${e.toString()}");
-  //   }
-  //   return productList;
-  // }
-
   void deleteProduct({
     required BuildContext context,
     required Product product,
     required VoidCallback onSuccess,
   }) async {
-    // checking the user auth token
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
       http.Response res = await http.post(
@@ -268,7 +147,6 @@ class AdminServices {
         }),
       );
 
-      //use context ensuring the mounted property across async functions
       if (context.mounted) {
         httpErrorHandle(
           response: res,
@@ -283,20 +161,12 @@ class AdminServices {
     }
   }
 
-  //
-  //
-  //
-  //
-  //
-  //
-  //
   void changeOrderStatus({
     required BuildContext context,
     required int status,
     required Order order,
     required VoidCallback onSuccess,
   }) async {
-    // checking the user auth token
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
       http.Response res = await http.post(
@@ -308,7 +178,6 @@ class AdminServices {
         body: jsonEncode({'id': order.id, 'status': status}),
       );
 
-      //use context ensuring the mounted property across async functions
       if (context.mounted) {
         httpErrorHandle(
           response: res,
@@ -319,16 +188,10 @@ class AdminServices {
     } catch (e) {
       showSnackBar(
           context: context,
-          text: "AdminServices getEarnings function error ${e.toString()}");
+          text:
+              "Lỗi trong chức năng thay đổi trạng thái đơn hàng: ${e.toString()}");
     }
   }
-
-//
-//
-//
-//
-//
-//
 
   Future<Map<String, dynamic>> getEarnings(BuildContext context) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);

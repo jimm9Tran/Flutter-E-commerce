@@ -1,13 +1,11 @@
-import 'package:ecommerce_major_project/constants/global_variables.dart';
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
-import 'package:ecommerce_major_project/main.dart';
-import 'package:ecommerce_major_project/models/product.dart';
 import 'package:ecommerce_major_project/constants/utils.dart';
-import 'package:ecommerce_major_project/providers/user_provider.dart';
 import 'package:ecommerce_major_project/features/cart/screens/cart_screen.dart';
 import 'package:ecommerce_major_project/features/product_details/services/product_detail_services.dart';
+import 'package:ecommerce_major_project/main.dart';
+import 'package:ecommerce_major_project/models/product.dart';
+import 'package:ecommerce_major_project/providers/user_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class WishListProduct extends StatefulWidget {
   final int index;
@@ -22,7 +20,6 @@ class _WishListProductState extends State<WishListProduct> {
 
   @override
   Widget build(BuildContext context) {
-    // fetching the particular product
     final productWishList = context.watch<UserProvider>().user.wishList == null
         ? []
         : context.watch<UserProvider>().user.wishList![widget.index];
@@ -34,14 +31,14 @@ class _WishListProductState extends State<WishListProduct> {
           margin: EdgeInsets.symmetric(horizontal: mq.width * .025),
           child: Row(
             children: [
-              // image
+              // hình ảnh sản phẩm
               Image.network(
                 product.images[0],
                 fit: BoxFit.contain,
                 height: mq.width * .25,
                 width: mq.width * .25,
               ),
-              // description
+              // mô tả sản phẩm
               Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -63,7 +60,7 @@ class _WishListProductState extends State<WishListProduct> {
                     padding: EdgeInsets.only(
                         left: mq.width * .025, top: mq.width * .0125),
                     child: Text(
-                      "₹ ${product.price.toStringAsFixed(2)}",
+                      "${product.price.toStringAsFixed(2)}đ",
                       style: const TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 18),
                       maxLines: 2,
@@ -73,14 +70,14 @@ class _WishListProductState extends State<WishListProduct> {
                     onPressed: () {
                       if (product.quantity == 0) {
                         showSnackBar(
-                            context: context, text: "Product out of stock");
+                            context: context, text: "Sản phẩm hết hàng");
                       } else {
                         productDetailServices.addToCart(
                             context: context, product: product);
                         showSnackBar(
                             context: context,
-                            text: "Added to cart",
-                            actionLabel: "View Cart",
+                            text: "Đã thêm vào giỏ hàng",
+                            actionLabel: "Xem giỏ hàng",
                             onTapFunction: () {
                               Navigator.pushNamed(
                                   context, CartScreen.routeName);
@@ -96,7 +93,7 @@ class _WishListProductState extends State<WishListProduct> {
                       backgroundColor: Colors.deepPurple,
                     ),
                     child: const Text(
-                      "Add to cart",
+                      "Thêm vào giỏ hàng",
                       style: TextStyle(color: Colors.white, fontSize: 13),
                     ),
                   ),
