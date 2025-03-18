@@ -74,6 +74,7 @@ class _TopCategoriesState extends State<TopCategories>
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          // ------------------ TAB BAR ------------------
           DefaultTabController(
             length: _tabLength,
             child: Container(
@@ -110,37 +111,40 @@ class _TopCategoriesState extends State<TopCategories>
                               : Colors.grey.shade50,
                           elevation: .8,
                           shape: RoundedRectangleBorder(
-                              side: BorderSide(
-                                  color: GlobalVariables.primaryGreyTextColor,
-                                  width: 0.1),
-                              borderRadius: BorderRadius.circular(10)),
+                            side: BorderSide(
+                              color: GlobalVariables.primaryGreyTextColor,
+                              width: 0.1,
+                            ),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                           child: Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SvgPicture.asset(
-                                    GlobalVariables.categoryImages[index]
-                                        ['image']!,
-                                    height: 30,
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SvgPicture.asset(
+                                  GlobalVariables.categoryImages[index]
+                                      ['image']!,
+                                  height: 30,
+                                  color: activeTabIndex == index
+                                      ? Colors.white
+                                      : Colors.grey.shade700,
+                                ),
+                                SizedBox(width: mq.width * .015),
+                                Text(
+                                  GlobalVariables.categoryImages[index]
+                                      ['title']!,
+                                  style: TextStyle(
                                     color: activeTabIndex == index
                                         ? Colors.white
                                         : Colors.grey.shade700,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w800,
                                   ),
-                                  SizedBox(width: mq.width * .015),
-                                  Text(
-                                    GlobalVariables.categoryImages[index]
-                                        ['title']!,
-                                    style: TextStyle(
-                                      color: activeTabIndex == index
-                                          ? Colors.white
-                                          : Colors.grey.shade700,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w800,
-                                    ),
-                                  ),
-                                ]),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -149,6 +153,7 @@ class _TopCategoriesState extends State<TopCategories>
               ),
             ),
           ),
+          // ------------------ NỘI DUNG TAB ------------------
           NotificationListener(
             onNotification: (scrollNotification) {
               if (scrollNotification is ScrollEndNotification) {
@@ -168,25 +173,32 @@ class _TopCategoriesState extends State<TopCategories>
                   children: [
                     for (int i = 0; i < _tabLength; i++)
                       SingleChildScrollView(
+                        padding: const EdgeInsets.only(bottom: 20),
                         child: Column(
-                          mainAxisSize: MainAxisSize
-                              .min, // Đảm bảo chiều cao Column là vừa đủ
+                          mainAxisSize: MainAxisSize.min,
                           children: [
+                            // Nút "Xem tất cả"
                             Padding(
                               padding: EdgeInsets.symmetric(
-                                      vertical: mq.height * .008)
-                                  .copyWith(right: mq.height * .015),
+                                vertical: mq.height * .008,
+                              ).copyWith(
+                                right: mq.height * .015,
+                              ),
                               child: InkWell(
                                 onTap: () {
                                   navigateToCategoryPage(
                                       context, categoriesList[activeTabIndex]);
                                 },
-                                child: Text("Xem tất cả",
-                                    style: TextStyle(
-                                        color: Colors.grey.shade800,
-                                        fontWeight: FontWeight.w600)),
+                                child: Text(
+                                  "Xem tất cả",
+                                  style: TextStyle(
+                                    color: Colors.grey.shade800,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
                               ),
                             ),
+                            // Container chứa GridView
                             Container(
                               decoration: BoxDecoration(
                                 border: Border(
@@ -196,39 +208,42 @@ class _TopCategoriesState extends State<TopCategories>
                                       color: Colors.grey.shade700, width: 0.4),
                                 ),
                               ),
-                              height: mq.height * 0.4,
+                              // Tăng chiều cao => 0.45
+                              height: mq.height * 0.45,
                               child: productList == null
                                   ? const ColorLoader2()
                                   : productList!.isEmpty
                                       ? const Center(
-                                          child: Text("Không có sản phẩm"))
+                                          child: Text("Không có sản phẩm"),
+                                        )
                                       : GridView.builder(
                                           scrollDirection: Axis.vertical,
-                                          physics: BouncingScrollPhysics(),
+                                          physics:
+                                              const BouncingScrollPhysics(),
                                           padding: EdgeInsets.symmetric(
                                             horizontal: mq.width * .04,
                                           ),
                                           gridDelegate:
                                               const SliverGridDelegateWithFixedCrossAxisCount(
                                             crossAxisCount: 2,
-                                            childAspectRatio: 0.72,
+                                            // Giảm tỉ lệ => item cao hơn
+                                            childAspectRatio: 0.65,
                                             mainAxisSpacing: 15,
                                             crossAxisSpacing: 15,
                                           ),
                                           itemCount:
                                               min(productList!.length, 4),
                                           itemBuilder: (context, index) {
-                                            Product product =
-                                                productList![index];
-                                            bool isProductAvailable =
-                                                productList![index].quantity ==
-                                                    0;
+                                            final product = productList![index];
+                                            final isProductAvailable =
+                                                product.quantity == 0;
+
                                             return Stack(
                                               alignment:
                                                   AlignmentDirectional.topEnd,
                                               children: [
                                                 Card(
-                                                  color: Color.fromARGB(
+                                                  color: const Color.fromARGB(
                                                       255, 254, 252, 255),
                                                   elevation: 2.5,
                                                   shape: RoundedRectangleBorder(
@@ -239,12 +254,15 @@ class _TopCategoriesState extends State<TopCategories>
                                                   child: Padding(
                                                     padding:
                                                         EdgeInsets.symmetric(
-                                                            horizontal:
-                                                                mq.width * .025,
-                                                            vertical:
-                                                                mq.width * .02),
+                                                      horizontal:
+                                                          mq.width * .025,
+                                                      vertical: mq.width * .02,
+                                                    ),
                                                     child: Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
                                                       children: [
+                                                        // Ảnh sản phẩm => 0.13
                                                         InkWell(
                                                           onTap: () {
                                                             Navigator.pushNamed(
@@ -257,7 +275,7 @@ class _TopCategoriesState extends State<TopCategories>
                                                           },
                                                           child: Container(
                                                             height:
-                                                                mq.height * .15,
+                                                                mq.height * .13,
                                                             width:
                                                                 mq.width * .4,
                                                             child:
@@ -271,6 +289,7 @@ class _TopCategoriesState extends State<TopCategories>
                                                         SizedBox(
                                                             height: mq.height *
                                                                 .005),
+                                                        // Tên sản phẩm
                                                         SizedBox(
                                                           width:
                                                               double.infinity,
@@ -284,83 +303,93 @@ class _TopCategoriesState extends State<TopCategories>
                                                                 TextAlign.start,
                                                           ),
                                                         ),
+                                                        // Giá sản phẩm
                                                         SizedBox(
                                                           width:
                                                               double.infinity,
                                                           child: Text(
-                                                            "${NumberFormat("#,###").format(product.price)}₫", // Định dạng giá
-                                                            style: TextStyle(
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold),
+                                                            "${NumberFormat("#,###").format(product.price)}₫",
+                                                            style:
+                                                                const TextStyle(
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
                                                             textAlign:
                                                                 TextAlign.start,
                                                           ),
                                                         ),
+                                                        const SizedBox(
+                                                            height: 8),
+                                                        // Icon wishlist + giỏ hàng
                                                         Row(
                                                           mainAxisAlignment:
                                                               MainAxisAlignment
                                                                   .spaceBetween,
                                                           children: [
-                                                            TextButton.icon(
-                                                              style: TextButton.styleFrom(
-                                                                  shape: RoundedRectangleBorder(
-                                                                      borderRadius:
-                                                                          BorderRadius.circular(
-                                                                              10)),
-                                                                  backgroundColor:
-                                                                      Colors
-                                                                          .grey
-                                                                          .shade200),
+                                                            IconButton(
+                                                              icon: const Icon(
+                                                                CupertinoIcons
+                                                                    .heart,
+                                                                size: 26,
+                                                                color:
+                                                                    Colors.red,
+                                                              ),
                                                               onPressed: () {
-                                                                homeServices.addToWishList(
-                                                                    context:
-                                                                        context,
-                                                                    product:
-                                                                        product);
+                                                                homeServices
+                                                                    .addToWishList(
+                                                                  context:
+                                                                      context,
+                                                                  product:
+                                                                      product,
+                                                                );
                                                                 showSnackBar(
+                                                                  context:
+                                                                      context,
+                                                                  text:
+                                                                      "Đã thêm vào danh sách yêu thích",
+                                                                  onTapFunction:
+                                                                      () {
+                                                                    Navigator.of(
+                                                                            context)
+                                                                        .push(GlobalVariables.createRoute(
+                                                                            WishListScreen()));
+                                                                  },
+                                                                  actionLabel:
+                                                                      "Xem",
+                                                                );
+                                                              },
+                                                            ),
+                                                            IconButton(
+                                                              icon: const Icon(
+                                                                CupertinoIcons
+                                                                    .cart_badge_plus,
+                                                                size: 28,
+                                                                color: Colors
+                                                                    .black87,
+                                                              ),
+                                                              onPressed: () {
+                                                                if (isProductAvailable) {
+                                                                  showSnackBar(
                                                                     context:
                                                                         context,
                                                                     text:
-                                                                        "Đã thêm vào danh sách yêu thích",
-                                                                    onTapFunction:
-                                                                        () {
-                                                                      Navigator.of(
-                                                                              context)
-                                                                          .push(
-                                                                              GlobalVariables.createRoute(WishListScreen()));
-                                                                    },
-                                                                    actionLabel:
-                                                                        "Xem");
+                                                                        "Sản phẩm hết hàng",
+                                                                  );
+                                                                } else {
+                                                                  addToCart(
+                                                                    product
+                                                                        .name,
+                                                                    product,
+                                                                  );
+                                                                  showSnackBar(
+                                                                    context:
+                                                                        context,
+                                                                    text:
+                                                                        "Đã thêm vào giỏ hàng",
+                                                                  );
+                                                                }
                                                               },
-                                                              icon: const Icon(
-                                                                  CupertinoIcons
-                                                                      .add,
-                                                                  size: 18,
-                                                                  color: Colors
-                                                                      .black87),
-                                                              label: const Text(
-                                                                  "wishlist",
-                                                                  style: TextStyle(
-                                                                      color: Colors
-                                                                          .black87)),
-                                                            ),
-                                                            Container(
-                                                              child: InkWell(
-                                                                  onTap:
-                                                                      isProductAvailable
-                                                                          ? () {
-                                                                              showSnackBar(context: context, text: "Sản phẩm hết hàng");
-                                                                            }
-                                                                          : () {
-                                                                              addToCart(product.name, product);
-                                                                              showSnackBar(context: context, text: "Đã thêm vào giỏ hàng");
-                                                                            },
-                                                                  child: const Icon(
-                                                                      CupertinoIcons
-                                                                          .cart_badge_plus,
-                                                                      size:
-                                                                          35)),
                                                             ),
                                                           ],
                                                         ),
@@ -370,7 +399,8 @@ class _TopCategoriesState extends State<TopCategories>
                                                 ),
                                               ],
                                             );
-                                          }),
+                                          },
+                                        ),
                             ),
                           ],
                         ),
